@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace ThesisProjectARM.Core.Models
 {
-    internal class DynamicDataModel
+    public class DynamicDataModel
     {
+        public Dictionary<string, object> Data { get; set; }
+
+        public DynamicDataModel()
+        {
+            Data = new Dictionary<string, object>();
+        }
     }
 }

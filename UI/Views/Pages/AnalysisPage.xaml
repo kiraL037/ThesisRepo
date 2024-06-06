@@ -3,12 +3,24 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:UI.Views.Pages"
+      xmlns:local="clr-namespace:ThesisProjectARM.UI.Views.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AnalysisPage">
-
     <Grid>
-        
+        <DataGrid ItemsSource="{Binding SelectedData.DefaultView}" AutoGenerateColumns="True" />
+
+        <ListBox ItemsSource="{Binding ColumnNames}" 
+                 SelectedItems="{Binding SelectedColumns}" 
+                 SelectionMode="Extended" Grid.Column="1" />
+
+        <Button Content="Perform KMeans Clustering" Command="{Binding PerformKMeansClusteringCommand}" />
+        <Button Content="Perform Regression Analysis" Command="{Binding PerformRegressionAnalysisCommand}" />
+        <Button Content="Calculate Correlation" Command="{Binding CalculateCorrelationCommand}" />
+        <Button Content="Calculate Mean" Command="{Binding CalculateMeanCommand}" />
+        <Button Content="Calculate Median" Command="{Binding CalculateMedianCommand}" />
+        <Button Content="Calculate Standard Deviation" Command="{Binding CalculateStandardDeviationCommand}" />
+        <Button Content="Forecast Time Series" Command="{Binding ForecastTimeSeriesCommand}" />
+        <Button Content="Detect Seasonal Patterns" Command="{Binding DetectSeasonalPatternsCommand}" />
     </Grid>
 </Page>

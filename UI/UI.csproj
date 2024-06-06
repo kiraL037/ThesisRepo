@@ -59,6 +59,7 @@
     <Compile Include="ViewModels\AnalysisVM.cs" />
     <Compile Include="ViewModels\AuthenticationWindowVM.cs" />
     <Compile Include="ViewModels\DataPageVM.cs" />
+    <Compile Include="ViewModels\DBCRUDVM.cs" />
     <Compile Include="ViewModels\FirstSetupWindowVM.cs" />
     <Compile Include="ViewModels\MainUIVM.cs" />
     <Compile Include="ViewModels\ManagerVM.cs" />
