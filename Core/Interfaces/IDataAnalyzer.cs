@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ThesisProjectARM.Core.Interfaces
 {
-    public interface IClassificationClustering
+    public interface IDataAnalyzer
     {
-        Task<object> KMeansClusteringAsync(DataTable data, string[] columnNames, int clusterCount);
+        DataTable AnalyzeData(DataTable data, string analysisType);
     }
 }

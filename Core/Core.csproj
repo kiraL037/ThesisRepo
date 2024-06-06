@@ -43,16 +43,21 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Interfaces\IClassificationClustering.cs" />
+    <Compile Include="Interfaces\IDataAnalyzer.cs" />
     <Compile Include="Interfaces\IDatabaseService.cs" />
     <Compile Include="Interfaces\IDataEntryRepository.cs" />
+    <Compile Include="Interfaces\IDataExporter.cs" />
     <Compile Include="Interfaces\IDataFilter.cs" />
     <Compile Include="Interfaces\IDataInfo.cs" />
     <Compile Include="Interfaces\IDataNormalizer.cs" />
     <Compile Include="Interfaces\IDataRepository.cs" />
     <Compile Include="Interfaces\IDataService.cs" />
+    <Compile Include="Interfaces\IDataVisualizer.cs" />
     <Compile Include="Interfaces\IFillMissingValues.cs" />
     <Compile Include="Interfaces\IRegressionAnalysis.cs" />
     <Compile Include="Interfaces\IRemoveDuplicates.cs" />
+    <Compile Include="Interfaces\IStatisticalAnalysis.cs" />
+    <Compile Include="Interfaces\ITimeSeriesAnalysis.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Interfaces\IWindowService.cs" />

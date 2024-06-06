@@ -8,11 +8,9 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AnalysisPage">
     <Grid>
-        <DataGrid ItemsSource="{Binding SelectedData.DefaultView}" AutoGenerateColumns="True" />
+        <DataGrid x:Name="dataGrid" AutoGenerateColumns="True" ItemsSource="{Binding SelectedData}"/>
 
-        <ListBox ItemsSource="{Binding ColumnNames}" 
-                 SelectedItems="{Binding SelectedColumns}" 
-                 SelectionMode="Extended" Grid.Column="1" />
+        <ListBox x:Name="analysisColumnsListBox" ItemsSource="{Binding Columns}" SelectionMode="Extended" SelectedItems="{Binding SelectedColumns}"/>
 
         <Button Content="Perform KMeans Clustering" Command="{Binding PerformKMeansClusteringCommand}" />
         <Button Content="Perform Regression Analysis" Command="{Binding PerformRegressionAnalysisCommand}" />

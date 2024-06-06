@@ -58,7 +58,9 @@
     <Compile Include="ViewModels\AdminWindowVM.cs" />
     <Compile Include="ViewModels\AnalysisVM.cs" />
     <Compile Include="ViewModels\AuthenticationWindowVM.cs" />
+    <Compile Include="ViewModels\DataExportVM.cs" />
     <Compile Include="ViewModels\DataPageVM.cs" />
+    <Compile Include="ViewModels\DataVisualizationVM.cs" />
     <Compile Include="ViewModels\DBCRUDVM.cs" />
     <Compile Include="ViewModels\FirstSetupWindowVM.cs" />
     <Compile Include="ViewModels\MainUIVM.cs" />
@@ -199,6 +201,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{b9466100-5713-4c84-9d7a-fc0e77704159}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\Services.csproj">
+      <Project>{c0b662cd-4595-46ac-a95b-3b18bd46af67}</Project>
+      <Name>Services</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Services.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThesisProjectARM.Core.Interfaces;
+using ThesisProjectARM.Core.Models;
 
 namespace ThesisProjectARM.Services.Services
 {
@@ -21,7 +24,7 @@ namespace ThesisProjectARM.Services.Services
             if (user != null)
             {
                 var hashedPassword = SecurityMethods.HashPassword(password, user.Salt);
-                return user.PasswordHash == hashedPassword;
+                return SecurityMethods.VerifyPassword(password, user.PasswordHash, user.Salt);
             }
             return false;
         }

@@ -9,30 +9,23 @@ namespace ThesisProjectARM.UI.ViewModels
 {
     public class RelayCommand : ICommand
     {
-        private readonly Func<Task> execute;
-        private readonly Func<bool> canExecute;
+        private readonly Action<object> execute;
+        private readonly Func<object, bool> canExecute;
 
-        public event EventHandler CanExecuteChanged;
-
-        public RelayCommand(Func<Task> execute, Func<bool> canExecute = null)
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {
             this.execute = execute;
             this.canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public event EventHandler CanExecuteChanged
         {
-            return canExecute == null || canExecute();
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
 
-        public async void Execute(object parameter)
-        {
-            await execute();
-        }
+        public bool CanExecute(object parameter) => canExecute == null || canExecute(parameter);
 
-        public void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }
+        public void Execute(object parameter) => execute(parameter);
     }
 }

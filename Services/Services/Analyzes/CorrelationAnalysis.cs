@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Services.Analyzes
+namespace ThesisProjectARM.Services.Services.Analyzes
 {
-    internal class CorrelationAnalysis
+    public class CorrelationAnalysis
     {
     }
 }

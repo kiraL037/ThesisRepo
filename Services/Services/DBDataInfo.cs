@@ -5,14 +5,16 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThesisProjectARM.Core.Models;
+using ThesisProjectARM.Core.Interfaces;
 
 namespace ThesisProjectARM.Services.Services
 {
-    public class DBDataInfo : IDataService
+    public class DBDataInfo : IDataInfo
     {
         private readonly string _connectionString;
 
-        public DatabaseService(string connectionString)
+        public DBDataInfo(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -101,4 +103,4 @@ namespace ThesisProjectARM.Services.Services
         }
     }
 }
-}
+

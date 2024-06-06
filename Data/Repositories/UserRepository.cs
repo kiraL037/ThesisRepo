@@ -4,6 +4,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ThesisProjectARM.Core.Interfaces;
+using ThesisProjectARM.Core.Models;
 
 namespace ThesisProjectARM.Data.Repositories
 {
