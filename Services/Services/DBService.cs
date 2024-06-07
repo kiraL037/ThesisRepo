@@ -3,11 +3,14 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using ThesisProjectARM.Core.Interfaces;
 using ThesisProjectARM.Core.Models;
+using NLog;
 
 namespace ThesisProjectARM.Services.Services
 {
     public class DBService : IDatabaseService
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public async Task<bool> SetupDatabaseAsync(ConnectionModel connection)
         {
             try
@@ -18,6 +21,11 @@ namespace ThesisProjectARM.Services.Services
                     await conn.OpenAsync();
                     string createDbQuery = $"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{connection.Database}') CREATE DATABASE [{connection.Database}]";
                     using (SqlCommand command = new SqlCommand(createDbQuery, conn))
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                    string useDatabaseQuery = "USE DB_THESIS";
+                    using (SqlCommand command = new SqlCommand(useDatabaseQuery, conn))
                     {
                         await command.ExecuteNonQueryAsync();
                     }
@@ -38,10 +46,15 @@ namespace ThesisProjectARM.Services.Services
                 }
                 return true;
             }
+            catch (SqlException sqlEx)
+            {
+                Logger.Error(sqlEx, "Ошибка инициализации базы данных");
+                throw;
+            }
             catch (Exception ex)
             {
-                // Логирование ошибки
-                return false;
+                Logger.Error(ex, "Ошибка инициализации базы данных");
+                throw;
             }
         }
 

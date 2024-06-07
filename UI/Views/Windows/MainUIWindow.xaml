@@ -7,10 +7,30 @@
         mc:Ignorable="d"
         Title="MainUIWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Load Data" Command="{Binding LoadDataCommand}" />
-        <Button Content="Analyze Data" Command="{Binding AnalyzeDataCommand}" />
-        <Button Content="Visualize Data" Command="{Binding VisualizeDataCommand}" />
-        <Button Content="Export Data" Command="{Binding ExportDataCommand}" />
-        <Button Content="Save Changes" Command="{Binding SaveChangesCommand}" />
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="Файл">
+                    <MenuItem Header="Открыть" Command="{Binding LoadDataCommand}"/>
+                    <MenuItem Header="Сохранить" Command="{Binding SaveDataCommand}"/>
+                </MenuItem>
+                <MenuItem Header="Помощь">
+                    <MenuItem Header="О программе" Command="{Binding AboutCommand}"/>
+                </MenuItem>
+                <MenuItem Header="Выход" Command="{Binding ExitCommand}"/>
+            </Menu>
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar Background="LightGreen">
+                    <Button Content="Загрузить файл" Command="{Binding LoadDataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+                    <Button Content="Сохранить данные" Command="{Binding SaveDataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+                    <Button Content="Подключить базу данных" Command="{Binding ConnectToDBCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+                </ToolBar>
+            </ToolBarTray>
+            <StackPanel DockPanel.Dock="Top" Background="LightGreen">
+                <Button Content="Отчет" Command="{Binding ReportCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+                <Button Content="Данные" Command="{Binding DataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+            </StackPanel>
+            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Margin="10"/>
+            <DataGrid ItemsSource="{Binding DataCollection}" AutoGenerateColumns="True" Margin="10"/>
+        </DockPanel>
     </Grid>
 </Window>

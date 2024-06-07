@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ThesisProjectARM.Core.Interfaces
 {
-    internal interface IWindowService
+    public interface IWindowService
     {
     }
 }

@@ -7,18 +7,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using UI.Views.Windows;
+using ThesisProjectARM.Core.Interfaces;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
-    public class RegistrationVM : INotifyPropertyChanged
+    public class RegistrationVM : ViewModelBase, INotifyPropertyChanged
     {
         private readonly IUserService _userService;
         private string _username;
         private string _password;
         private bool _isAdmin;
 
-        public RegisterViewModel(IUserService userService)
+        public RegistrationVM(IUserService userService)
         {
             _userService = userService;
         }
@@ -91,5 +91,31 @@ namespace ThesisProjectARM.UI.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string result = null;
+                switch (columnName)
+                {
+                    case nameof(Username):
+                        if (string.IsNullOrWhiteSpace(Username))
+                            result = "Логин не может быть пустым";
+                        break;
+                    case nameof(Password):
+                        if (string.IsNullOrWhiteSpace(Password))
+                            result = "Пароль не может быть пустым";
+                        break;
+                    case nameof(ConfirmPassword):
+                        if (ConfirmPassword != Password)
+                            result = "Пароли не совпадают";
+                        break;
+                }
+                return result;
+            }
+        }
+
+        public string Error => null;
     }
 }

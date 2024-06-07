@@ -2,23 +2,53 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using ThesisProjectARM.Core.Interfaces;
 using ThesisProjectARM.Core.Models;
+using NLog;
 
 namespace ThesisProjectARM.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly string _connectionString;
 
         public UserRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
-
-        public async Task<User> GetUserByUsernameAsync(string username)
+       
+        public async Task<bool> AdminUserExistsAsync()
+        {
+            string connectionString = Settings.Default.ConnectionString.Replace("master", "DB_THESIS");
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    string query = "SELECT COUNT(*) FROM Users WHERE IsAdmin = 1";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        int adminCount = (int)await command.ExecuteScalarAsync();
+                        return adminCount > 0;
+                    }
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                Logger.Error(sqlEx, "Ошибка проверки наличия администратора");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Ошибка проверки наличия администратора");
+                throw;
+            }
+        }
+public async Task<User> GetUserByUsernameAsync(string username)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
