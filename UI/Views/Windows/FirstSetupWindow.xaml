@@ -7,10 +7,27 @@
         mc:Ignorable="d"
         Title="FirstSetupWindow" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="ServerTextBox" Text="{Binding Server, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
-        <TextBox x:Name="DatabaseTextBox" Text="{Binding Database, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
-        <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
-        <PasswordBox x:Name="PasswordBox" Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
-        <Button Content="Setup" Command="{Binding SetupCommand}" Margin="10" />
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <TextBlock Text="Сервер"/>
+            <TextBox x:Name="ServerTextBox" Text="{Binding Server, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+
+            <TextBlock Text="База данных" />
+            <TextBox x:Name="DatabaseTextBox" Text="{Binding Database, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+
+            <RadioButton x:Name="WindowsAuthRButton" Content="Windows Authentication" IsChecked="True" GroupName="AuthType"/>
+            <RadioButton x:Name="SqlServerAuthRButton" Content="SQL Server Authentication" IsChecked="False" GroupName="AuthType"/>
+
+            <TextBlock Text="Пользователь" />
+            <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+
+            <TextBlock Text="Пароль"/>
+            <PasswordBox x:Name="PasswordBox" Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+
+            <TextBlock Text="Повторите пароль"/>
+            <PasswordBox x:Name="ConfirmPasswordBox" Width="200" Margin="10" Tag="Подтвердите пароль" Foreground="Gray" GotFocus="Window_Loaded" LostFocus="Window_Loaded" IsEnabled="{Binding ElementName=SqlServerAuthRButton, Path=IsChecked}"/>
+
+            <Button Content="Setup" Command="{Binding SetupCommand}" Margin="10" />
+        </StackPanel>
     </Grid>
 </Window>

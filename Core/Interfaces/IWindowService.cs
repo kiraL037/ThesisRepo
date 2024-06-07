@@ -8,5 +8,10 @@ namespace ThesisProjectARM.Core.Interfaces
 {
     public interface IWindowService
     {
+        bool IsWindowsAuth();
+        void CreateManagerAccount();
+        void CloseWindow(bool? dialogResult = null);
+        void ShowMessage(string message);
     }
 }
+

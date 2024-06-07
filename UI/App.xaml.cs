@@ -11,6 +11,7 @@ using ThesisProjectARM.UI.Views.Windows;
 using ThesisProjectARM.Services.Services;
 using ThesisProjectARM.Data;
 using UI.Properties;
+using System.Configuration;
 using ThesisProjectARM.Data.Repositories;
 
 namespace UI
@@ -77,9 +78,36 @@ namespace UI
             {
                 Logger.Error(ex, "Ошибка инициализации базы данных");
                 MessageBox.Show($"Ошибка инициализации базы данных: {ex.Message}");
-                UI.Properties.Settings.Default.ConnectionString = string.Empty;
-                UI.Properties.Settings.Default.Save();
+                Settings.Default.ConnectionString = string.Empty;
+                Settings.Default.Save();
                 Shutdown();
+            }
+        }
+
+        public void SaveConnectionString(string connectionString)
+        {
+            try
+            {
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                if (config.ConnectionStrings.ConnectionStrings["MyConnectionString"] != null)
+                {
+                    config.ConnectionStrings.ConnectionStrings["MyConnectionString"].ConnectionString = connectionString;
+                }
+                else
+                {
+                    config.ConnectionStrings.ConnectionStrings.Add(new ConnectionStringSettings("MyConnectionString", connectionString, "System.Data.SqlClient"));
+                }
+                config.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("connectionStrings");
+
+                Settings.Default.ConnectionString = connectionString;
+                Settings.Default.Save();
+
+                MessageBox.Show("Connection string saved successfully.");
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                MessageBox.Show("Error saving connection string: " + ex.Message);
             }
         }
 

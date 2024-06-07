@@ -41,13 +41,13 @@ namespace ThesisProjectARM.Services.Services
         {
             try
             {
-                string dbConnectionString = connectionString.Replace("master", "DB_THESIS");
-                using (SqlConnection connection = new SqlConnection(dbConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     await connection.OpenAsync();
                     if (!await AdminUserExistsAsync(connection))
                     {
-                        OpenAdminCreationWindow(dbConnectionString);
+                        var adminCreationWindow = _adminCreationWindowFactory();
+                        adminCreationWindow.ShowDialog();
                     }
                 }
             }
@@ -70,15 +70,6 @@ namespace ThesisProjectARM.Services.Services
             {
                 int adminCount = (int)await command.ExecuteScalarAsync();
                 return adminCount > 0;
-            }
-        }
-
-        private void OpenAdminCreationWindow(string connectionString)
-        {
-            var adminWindow = new AdminWindow(connectionString);
-            if (adminWindow.ShowDialog() != true)
-            {
-                Application.Current.Shutdown();
             }
         }
     }

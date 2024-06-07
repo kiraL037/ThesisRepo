@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ThesisProjectARM.Core.Interfaces;
 using ThesisProjectARM.Core.Models;
 using NLog;
+using ThesisProjectARM.Data.Repositories;
 
 namespace ThesisProjectARM.Data.Repositories
 {
@@ -21,12 +22,12 @@ namespace ThesisProjectARM.Data.Repositories
             _connectionString = connectionString;
         }
 
+
         public async Task<bool> AdminUserExistsAsync()
         {
-            string connectionString = ThesisProjectARM.UI.Properties.Settings.Default.ConnectionString.Replace("master", "DB_THESIS");
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
                     string query = "SELECT COUNT(*) FROM Users WHERE IsAdmin = 1";

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ThesisProjectARM.UI.ViewModels;
+using OxyPlot;
 
 namespace ThesisProjectARM.UI.Views.Pages
 {

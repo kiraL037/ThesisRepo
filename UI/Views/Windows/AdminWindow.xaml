@@ -7,10 +7,13 @@
         mc:Ignorable="d"
         Title="AdminWindow" Height="450" Width="800">
     <Grid>
-        <TextBlock Text="Admin Setup" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
-        <TextBlock Text="Enter Admin Details:" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"/>
-        <TextBox x:Name="AdminUsernameTextBox" Width="300" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <PasswordBox x:Name="AdminPasswordBox" Width="300" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,0"/>
-        <Button Content="Save" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20,20,20" Click="SaveButton_Click"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Введите данные менеджера:" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"/>
+            <TextBlock Text="Пользователь" />
+            <TextBox x:Name="AdminUsernameTextBox" Width="300" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="Пароль"/>
+            <PasswordBox x:Name="AdminPasswordBox" Width="300" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,0"/>
+            <Button Content="Сохранить" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20,20,20" Click="SaveButton_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -9,18 +9,33 @@
       Title="AnalysisPage">
     <Grid>
         <DataGrid x:Name="dataGrid" AutoGenerateColumns="True" ItemsSource="{Binding SelectedData}"/>
-
-        <ListBox x:Name="AnalysisColumnsListBox" 
-                 SelectionChanged="AnalysisColumnsListBox_SelectionChanged">
-        </ListBox>
-
-        <Button Content="Perform KMeans Clustering" Command="{Binding PerformKMeansClusteringCommand}" />
-        <Button Content="Perform Regression Analysis" Command="{Binding PerformRegressionAnalysisCommand}" />
-        <Button Content="Calculate Correlation" Command="{Binding CalculateCorrelationCommand}" />
-        <Button Content="Calculate Mean" Command="{Binding CalculateMeanCommand}" />
-        <Button Content="Calculate Median" Command="{Binding CalculateMedianCommand}" />
-        <Button Content="Calculate Standard Deviation" Command="{Binding CalculateStandardDeviationCommand}" />
-        <Button Content="Forecast Time Series" Command="{Binding ForecastTimeSeriesCommand}" />
-        <Button Content="Detect Seasonal Patterns" Command="{Binding DetectSeasonalPatternsCommand}" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"  Margin="10">
+            <ListBox x:Name="AnalysisColumnsListBox" SelectionChanged="AnalysisColumnsListBox_SelectionChanged">
+                <ListBoxItem>
+                    <Button Content="Perform KMeans Clustering" Command="{Binding PerformKMeansClusteringCommand}" />
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button Content="Perform Regression Analysis" Command="{Binding PerformRegressionAnalysisCommand}" />
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button Content="Calculate Correlation" Command="{Binding CalculateCorrelationCommand}" />
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button Content="Calculate Mean" Command="{Binding CalculateMeanCommand}" />
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button Content="Calculate Median" Command="{Binding CalculateMedianCommand}" />
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button Content="Calculate Standard Deviation" Command="{Binding CalculateStandardDeviationCommand}" />
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button Content="Forecast Time Series" Command="{Binding ForecastTimeSeriesCommand}" />
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button Content="Detect Seasonal Patterns" Command="{Binding DetectSeasonalPatternsCommand}" />
+                </ListBoxItem>
+            </ListBox>
+        </StackPanel>
     </Grid>
 </Page>

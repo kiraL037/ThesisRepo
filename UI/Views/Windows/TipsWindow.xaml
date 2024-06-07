@@ -7,6 +7,16 @@
         mc:Ignorable="d"
         Title="TipsWindow" Height="450" Width="800">
     <Grid>
-        
+        <ScrollViewer Margin="10">
+            <StackPanel>
+                <TextBlock Text="Рекомендации перед началом работы:" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+                <TextBlock Text="1. Убедитесь, что SQL Server запущен." TextWrapping="Wrap" Margin="0,0,0,5"/>
+                <TextBlock Text="2. Проверьте правильность имени сервера в строке подключения." TextWrapping="Wrap" Margin="0,0,0,5"/>
+                <TextBlock Text="3. Убедитесь, что разрешены удаленные подключения к SQL Server." TextWrapping="Wrap" Margin="0,0,0,5"/>
+                <TextBlock Text="4. Проверьте настройки брандмауэра, чтобы SQL Server не был заблокирован." TextWrapping="Wrap" Margin="0,0,0,5"/>
+                <TextBlock Text="5. Убедитесь, что включены необходимые сетевые протоколы в SQL Server Configuration Manager." TextWrapping="Wrap" Margin="0,0,0,5"/>
+                <Button Content="Назад" Command="{Binding BackToWelcomeCommand}"/>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

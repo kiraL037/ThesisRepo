@@ -7,8 +7,11 @@
         mc:Ignorable="d"
         Title="WelcomeWindow" Height="450" Width="800">
     <Grid>
-        <TextBlock Text="Welcome to the Thesis Project Application" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
-        <TextBlock Text="Please follow the instructions to set up and use the application." HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"/>
-        <Button Content="Start" HorizontalAlignment="Center" VerticalAlignment="Center" Click="StartButton_Click"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Приветствую!" HorizontalAlignment="Center" TextAlignment="Center" FontSize="36" Margin="0,0,0,20" Height="50"/>
+            <TextBlock Text="Для начала работы войдите в приложение" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+            <TextBlock Text="Подсказки" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"/>
+            <Button Content="Начать работу" HorizontalAlignment="Center" VerticalAlignment="Center" Click="StartButton_Click"/>
+        </StackPanel>
     </Grid>
 </Window>
