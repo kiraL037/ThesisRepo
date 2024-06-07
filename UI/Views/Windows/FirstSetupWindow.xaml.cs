@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ThesisProjectARM.UI.ViewModels;
 
 namespace ThesisProjectARM.UI.Views.Windows
 {
@@ -21,7 +22,8 @@ namespace ThesisProjectARM.UI.Views.Windows
     {
         public FirstSetupWindow()
         {
-            InitializeComponent();
+            InitializeComponent(); 
+            this.DataContext = new FirstSetupWindowVM();
         }
     }
 }

@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using UI.Views.Windows;
+using ThesisProjectARM.UI.Views.Windows;
+using ThesisProjectARM.Core.Models;
+using ThesisProjectARM.Core.Interfaces;
 
 namespace ThesisProjectARM.UI.ViewModels
 {

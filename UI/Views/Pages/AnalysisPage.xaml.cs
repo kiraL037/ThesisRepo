@@ -6,15 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ThesisProjectARM.UI.ViewModels;
-using ThesisProjectARM.Services.Services.Analyzes;
 
 namespace ThesisProjectARM.UI.Views.Pages
 {
@@ -29,8 +21,8 @@ namespace ThesisProjectARM.UI.Views.Pages
         {
             InitializeComponent();
 
-            var classificationClustering = new ClassificationClustering();
-            var regressionAnalysis = new RegressionAnalysis();
+            var classificationClustering = new ClassificationClustering(); // Предполагаем, что этот класс определен где-то
+            var regressionAnalysis = new RegressionAnalysis(); // Предполагаем, что этот класс определен где-то
             analysisViewModel = new AnalysisVM(classificationClustering, regressionAnalysis);
             DataContext = analysisViewModel;
         }
@@ -38,6 +30,15 @@ namespace ThesisProjectARM.UI.Views.Pages
         public void LoadData(DataTable dataTable)
         {
             analysisViewModel.SelectedData = dataTable;
+        }
+
+        private void AnalysisColumnsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            analysisViewModel.SelectedColumns.Clear();
+            foreach (var item in analysisColumnsListBox.SelectedItems)
+            {
+                analysisViewModel.SelectedColumns.Add(item as string);
+            }
         }
     }
 }

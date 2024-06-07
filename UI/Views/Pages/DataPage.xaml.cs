@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ThesisProjectARM.UI.ViewModels;
 
 namespace ThesisProjectARM.UI.Views.Pages
 {
@@ -23,6 +24,7 @@ namespace ThesisProjectARM.UI.Views.Pages
         public DataPage()
         {
             InitializeComponent();
+            this.DataContext = new DataPageVM();
         }
     }
 }

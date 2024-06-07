@@ -8,8 +8,8 @@ using System.ComponentModel;
 using ThesisProjectARM.Core.Interfaces;
 using ThesisProjectARM.UI.ViewModels;
 using ThesisProjectARM.UI.Views.Windows;
-using ThesisProjectARM.Data;
 using ThesisProjectARM.Services.Services;
+using ThesisProjectARM.Data;
 using UI.Properties;
 
 namespace UI
@@ -31,7 +31,7 @@ namespace UI
         private void ConfigureContainer()
         {
             _container.Register<IUserRepository, UserRepository>(Lifestyle.Singleton);
-            _container.Register<IDatabaseService, DatabaseService>(Lifestyle.Singleton);
+            _container.Register<IDatabaseService, DBService>(Lifestyle.Singleton);
             _container.Register<IWindowService, WindowService>(Lifestyle.Singleton);
             _container.Register<ManagerVM>(Lifestyle.Singleton);
             _container.Register<RegistrationVM>(Lifestyle.Singleton);

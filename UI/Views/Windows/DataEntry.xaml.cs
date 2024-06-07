@@ -21,7 +21,7 @@ namespace ThesisProjectARM.UI.Views.Windows
     {
         public DataEntry()
         {
-            InitializeComponent();
+            InitializeComponent(); 
         }
     }
 }

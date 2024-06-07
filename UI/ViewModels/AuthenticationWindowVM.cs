@@ -5,6 +5,7 @@ using System.Windows.Input;
 using ThesisProjectARM.Core.Interfaces;
 using ThesisProjectARM.Core.Models;
 using System.Data;
+using ThesisProjectARM.UI.Views.Windows;
 using System.Windows;
 
 namespace ThesisProjectARM.UI.ViewModels
@@ -16,7 +17,7 @@ namespace ThesisProjectARM.UI.ViewModels
         private string _password;
         private bool _isAuthenticated;
 
-        public AuthViewModel(IUserService userService)
+        public AuthenticationWindowVM(IUserService userService)
         {
             _userService = userService;
         }
@@ -51,16 +52,14 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
-        public ICommand AuthenticateCommand => new RelayCommand(async () => await AuthenticateUser());
+        public ICommand AuthenticateCommand => new RelayCommand(async (param) => await AuthenticateUser());
 
         private async Task AuthenticateUser()
         {
-
             IsAuthenticated = await _userService.AuthenticateUserAsync(Username, Password);
             if (IsAuthenticated)
             {
                 // Логика при успешной аутентификации
-                // Открытие основного окна приложения, например:
                 MainUIWindow mainUIWindow = new MainUIWindow();
                 mainUIWindow.Show();
                 // Закрытие окна аутентификации
@@ -69,7 +68,6 @@ namespace ThesisProjectARM.UI.ViewModels
             else
             {
                 // Логика при неуспешной аутентификации
-                // Показать сообщение об ошибке пользователю
                 MessageBox.Show("Invalid username or password.", "Authentication Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

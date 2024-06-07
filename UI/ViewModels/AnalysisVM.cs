@@ -17,7 +17,7 @@ namespace ThesisProjectARM.UI.ViewModels
     {
         private readonly IClassificationClustering classificationClusteringService;
         private readonly IRegressionAnalysis regressionAnalysisService;
-        public DataTable selectedData { get; set; }
+        public DataTable SelectedData { get; set; }
 
         public AnalysisVM(IClassificationClustering classificationClusteringService, IRegressionAnalysis regressionAnalysisService)
         {
@@ -27,17 +27,17 @@ namespace ThesisProjectARM.UI.ViewModels
 
         public void LoadSelectedData(DataTable dataTable)
         {
-            selectedData = dataTable;
+            SelectedData = dataTable;
         }
 
         public async Task PerformKMeansClusteringAsync(string[] columnNames, int clusterCount)
         {
-            var clusters = await classificationClusteringService.KMeansClusteringAsync(selectedData, columnNames, clusterCount);
+            var clusters = await classificationClusteringService.KMeansClusteringAsync(SelectedData, columnNames, clusterCount);
         }
 
         public async Task PerformRegressionAnalysisAsync(string dependentVariable, string[] independentVariables, float[] newValues)
         {
-            var prediction = await regressionAnalysisService.PredictAsync(selectedData, dependentVariable, independentVariables, newValues);
+            var prediction = await regressionAnalysisService.PredictAsync(SelectedData, dependentVariable, independentVariables, newValues);
         }
 
         public async Task<double> CalculateCorrelationAsync(string column1, string column2)

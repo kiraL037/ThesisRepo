@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ThesisProjectARM.Core.Interfaces;
+using ThesisProjectARM.UI.Views.Windows;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
@@ -16,6 +17,7 @@ namespace ThesisProjectARM.UI.ViewModels
         private readonly IUserService _userService;
         private string _username;
         private string _password;
+        private string _confirmPassword; // Добавлено поле для подтверждения пароля
         private bool _isAdmin;
 
         public RegistrationVM(IUserService userService)
@@ -43,6 +45,16 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
+        public string ConfirmPassword // Добавлено свойство для подтверждения пароля
+        {
+            get => _confirmPassword;
+            set
+            {
+                _confirmPassword = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsAdmin
         {
             get => _isAdmin;
@@ -53,11 +65,11 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
-        public ICommand RegisterCommand => new RelayCommand(async () => await RegisterUser());
+        public ICommand RegisterCommand => new RelayCommand(async (param) => await RegisterUser());
 
         private async Task RegisterUser()
         {
-            var result = await _userService.RegisterUserAsync(Username, Password, IsAdmin);
+            bool result = await _userService.RegisterUserAsync(Username, Password, IsAdmin); // Ошибка исправлена
             if (result)
             {
                 // Логика после успешной регистрации
@@ -85,9 +97,9 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public new event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected new virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

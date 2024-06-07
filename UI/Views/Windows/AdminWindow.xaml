@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="AdminWindow" Height="450" Width="800">
     <Grid>
-        
+        <TextBlock Text="Admin Setup" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+        <TextBlock Text="Enter Admin Details:" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"/>
+        <TextBox x:Name="AdminUsernameTextBox" Width="300" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <PasswordBox x:Name="AdminPasswordBox" Width="300" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,0"/>
+        <Button Content="Save" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20,20,20" Click="SaveButton_Click"/>
     </Grid>
 </Window>

@@ -29,7 +29,7 @@ namespace ThesisProjectARM.Services.Services
             return false;
         }
 
-        public async Task RegisterUserAsync(string username, string password, bool isAdmin)
+        public async Task<bool> RegisterUserAsync(string username, string password, bool isAdmin)
         {
             if (await _userRepository.UserExistsAsync(username))
             {
@@ -48,6 +48,7 @@ namespace ThesisProjectARM.Services.Services
             };
 
             await _userRepository.CreateUserAsync(user);
+            return true; // Возвращаем true, если регистрация прошла успешно
         }
     }
 }

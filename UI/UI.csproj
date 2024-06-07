@@ -66,6 +66,7 @@
     <Compile Include="ViewModels\AdminWindowVM.cs" />
     <Compile Include="ViewModels\AnalysisVM.cs" />
     <Compile Include="ViewModels\AuthenticationWindowVM.cs" />
+    <Compile Include="ViewModels\DataEntryVM.cs" />
     <Compile Include="ViewModels\DataExportVM.cs" />
     <Compile Include="ViewModels\DataPageVM.cs" />
     <Compile Include="ViewModels\DataVisualizationVM.cs" />
@@ -220,6 +221,10 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{b9466100-5713-4c84-9d7a-fc0e77704159}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{c204cbbd-e10d-406a-b8ba-86331b3890d6}</Project>
+      <Name>Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Services\Services.csproj">
       <Project>{c0b662cd-4595-46ac-a95b-3b18bd46af67}</Project>

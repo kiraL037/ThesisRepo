@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         Title="WelcomeWindow" Height="450" Width="800">
     <Grid>
-        
+        <TextBlock Text="Welcome to the Thesis Project Application" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+        <TextBlock Text="Please follow the instructions to set up and use the application." HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"/>
+        <Button Content="Start" HorizontalAlignment="Center" VerticalAlignment="Center" Click="StartButton_Click"/>
     </Grid>
 </Window>
