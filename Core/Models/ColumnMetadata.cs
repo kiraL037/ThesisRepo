@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace ThesisProjectARM.Core.Models
 {
-    internal class ColumnMetadata
+    public class ColumnMetadata
     {
+        public string ColumnName { get; set; }
+        public string DataType { get; set; }
     }
 }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace ThesisProjectARM.Core.Models
 {
-    internal class InfoMetadata
+    public class InfoMetaData
     {
+        public string DataNameInfo { get; set; }
+        public List<ColumnMetadata> Columns { get; set; }
     }
 }
+

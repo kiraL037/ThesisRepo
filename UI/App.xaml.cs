@@ -13,6 +13,7 @@ using ThesisProjectARM.Data;
 using UI.Properties;
 using System.Configuration;
 using ThesisProjectARM.Data.Repositories;
+using System.Xml.Linq;
 
 namespace UI
 {
@@ -33,7 +34,7 @@ namespace UI
         private void ConfigureContainer()
         {
             _container.Register<IUserRepository, UserRepository>(Lifestyle.Singleton);
-            _container.Register<IDatabaseService, DataEntryService>(Lifestyle.Singleton);
+            _container.Register<IDatabaseService, DBService>(Lifestyle.Singleton);
             _container.Register<IWindowService, WindowService>(Lifestyle.Singleton);
             _container.Register<ManagerVM>(Lifestyle.Singleton);
             _container.Register<RegistrationVM>(Lifestyle.Singleton);
@@ -51,7 +52,14 @@ namespace UI
                 OpenDatabaseConnectionWindow();
                 connectionString = UI.Properties.Settings.Default.ConnectionString;
             }
-
+            _container.Register<MainUIWindow>(Lifestyle.Transient);
+            _container.Register<MainWindow>(Lifestyle.Transient);
+            _container.Register<TipsWindow>(Lifestyle.Transient);
+            _container.Register<SelectTableDialog>(Lifestyle.Transient);
+            _container.Register<RegistrationWindow>(Lifestyle.Transient);
+            _container.Register<FirstSetupWindow>(Lifestyle.Transient);
+            _container.Register<ManagerWindow>(Lifestyle.Transient);
+            _container.Register<DataEntry>(Lifestyle.Transient);
             await InitializeDatabaseAsync(dataEntryService, connectionString);
             ShowWelcomeWindow();
         }

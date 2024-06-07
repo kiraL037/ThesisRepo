@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ThesisProjectARM.UI.ViewModels;
+using UI;
 
 namespace ThesisProjectARM.UI.Views.Windows
 {

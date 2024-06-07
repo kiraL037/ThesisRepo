@@ -24,7 +24,7 @@ namespace ThesisProjectARM.Services.Services
                     {
                         await command.ExecuteNonQueryAsync();
                     }
-                    string useDatabaseQuery = "USE DB_THESIS";
+                    string useDatabaseQuery = $"USE [{connection.Database}]";
                     using (SqlCommand command = new SqlCommand(useDatabaseQuery, conn))
                     {
                         await command.ExecuteNonQueryAsync();

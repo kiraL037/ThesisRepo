@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ThesisProjectARM.Core.Interfaces;
+using ThesisProjectARM.UI.Views.Pages;
+using UI;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
@@ -40,18 +42,18 @@ namespace ThesisProjectARM.UI.ViewModels
         public ICommand ExportDataCommand { get; }
         public ICommand SaveChangesCommand { get; }
 
-        private void LoadData(object parameter)
+        private void LoadData()
         {
-            try
+            var dataPageVM = new DataPageVM();
+            var dataPage = new DataPage
             {
-                string filePath = parameter as string;
-                LoadedData = dataService.LoadData(filePath);
-            }
-            catch (Exception ex)
-            {
-                // Логирование ошибки и вывод сообщения пользователю
-                MessageBox.Show($"Ошибка при загрузке данных: {ex.Message}");
-            }
+                DataContext = dataPageVM
+            };
+
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.MainFrame.Content = dataPage;
+
+            dataPageVM.LoadDataCommand.Execute(null);
         }
 
         private void AnalyzeData(object parameter)

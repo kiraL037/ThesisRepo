@@ -29,7 +29,7 @@
                 <Button Content="Отчет" Command="{Binding ReportCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
                 <Button Content="Данные" Command="{Binding DataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
             </StackPanel>
-            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Margin="10"/>
+            <Frame Name="MainFrame"/>
             <DataGrid ItemsSource="{Binding DataCollection}" AutoGenerateColumns="True" Margin="10"/>
         </DockPanel>
     </Grid>

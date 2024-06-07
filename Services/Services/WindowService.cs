@@ -5,25 +5,32 @@ using System.Text;
 using System.Threading.Tasks;
 using ThesisProjectARM.Core.Interfaces;
 using System.Windows;
+using SimpleInjector;
 
 namespace ThesisProjectARM.Services.Services
 {
     public class WindowService : IWindowService
     {
+        private readonly Func<FirstSetupWindow> _firstSetupWindowFactory;
+        private readonly Func<RegistrationWindow> _registrationWindowFactory;
+
+        public WindowService(Func<FirstSetupWindow> firstSetupWindowFactory, Func<RegistrationWindow> registrationWindowFactory)
+        {
+            _firstSetupWindowFactory = firstSetupWindowFactory;
+            _registrationWindowFactory = registrationWindowFactory;
+        }
+
         public bool IsWindowsAuth()
         {
-            if (Application.Current.MainWindow is FirstSetupWindow window)
-            {
-                return window.WindowsAuthRButton.IsChecked == true;
-            }
-            return false;
+            var window = _firstSetupWindowFactory();
+            return window.WindowsAuthRButton.IsChecked == true;
         }
 
         public void CreateManagerAccount()
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                RegistrationWindow registrationWindow = new RegistrationWindow(isManager: true);
+                var registrationWindow = _registrationWindowFactory();
                 registrationWindow.ShowDialog();
             });
         }

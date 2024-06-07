@@ -24,7 +24,6 @@ namespace ThesisProjectARM.UI.Views.Pages
         public DataPage()
         {
             InitializeComponent();
-            this.DataContext = new DataPageVM();
         }
     }
 }

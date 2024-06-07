@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ThesisProjectARM.UI.ViewModels
@@ -14,22 +15,14 @@ namespace ThesisProjectARM.UI.ViewModels
         public ObservableCollection<string> Tables
         {
             get { return _tables; }
-            set
-            {
-                _tables = value;
-                OnPropertyChanged(nameof(Tables));
-            }
+            set { _tables = value; OnPropertyChanged(nameof(Tables)); }
         }
 
         private string _selectedTable;
         public string SelectedTable
         {
             get { return _selectedTable; }
-            set
-            {
-                _selectedTable = value;
-                OnPropertyChanged(nameof(SelectedTable));
-            }
+            set { _selectedTable = value; OnPropertyChanged(nameof(SelectedTable)); }
         }
 
         private ICommand _selectTableCommand;
@@ -47,19 +40,23 @@ namespace ThesisProjectARM.UI.ViewModels
 
         private bool CanSelectTable()
         {
-            // Logic to enable or disable the command
             return !string.IsNullOrEmpty(SelectedTable);
         }
 
         private void SelectTable()
         {
             // Logic to select table
+            MessageBox.Show($"Table {SelectedTable} selected.");
         }
 
         public SelectTableVM()
         {
-            Tables = new ObservableCollection<string>();
-            // Logic to populate Tables collection
+            Tables = new ObservableCollection<string>
+        {
+            "Table1",
+            "Table2",
+            "Table3"
+        };
         }
     }
 }

@@ -13,17 +13,17 @@ namespace ThesisProjectARM.UI.ViewModels
         public ObservableCollection<string> Tips
         {
             get { return _tips; }
-            set
-            {
-                _tips = value;
-                OnPropertyChanged(nameof(Tips));
-            }
+            set { _tips = value; OnPropertyChanged(nameof(Tips)); }
         }
 
         public TipsWindowVM()
         {
-            Tips = new ObservableCollection<string>();
-            // Logic to populate Tips collection
+            Tips = new ObservableCollection<string>
+        {
+            "Tip 1: Follow the instructions.",
+            "Tip 2: Save your work regularly.",
+            "Tip 3: Ensure data is backed up."
+        };
         }
     }
 }

@@ -78,6 +78,18 @@ namespace ThesisProjectARM.Data.Repositories
             return null;
         }
 
+        public async Task CreateUserAsync(string username, string hashedPassword, string salt, bool isAdmin)
+        {
+            User user = new User
+            {
+                Username = username,
+                PasswordHash = hashedPassword,
+                Salt = salt,
+                IsAdmin = isAdmin
+            };
+            await CreateUserAsync(user);
+        }
+
         public async Task CreateUserAsync(User user)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

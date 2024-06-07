@@ -50,10 +50,10 @@
     <Compile Include="Interfaces\IDataFilter.cs" />
     <Compile Include="Interfaces\IDataInfo.cs" />
     <Compile Include="Interfaces\IDataNormalizer.cs" />
-    <Compile Include="Interfaces\IDataRepository.cs" />
     <Compile Include="Interfaces\IDataService.cs" />
     <Compile Include="Interfaces\IDataVisualizer.cs" />
     <Compile Include="Interfaces\IFillMissingValues.cs" />
+    <Compile Include="Interfaces\IGetData.cs" />
     <Compile Include="Interfaces\IRegressionAnalysis.cs" />
     <Compile Include="Interfaces\IRemoveDuplicates.cs" />
     <Compile Include="Interfaces\IStatisticalAnalysis.cs" />

@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 using System.Windows;
 using ThesisProjectARM.Core.Interfaces;
 using NLog;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ThesisProjectARM.Services.Services
 {
     public class DataEntryService : IDataEntryRepository
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private readonly Func<ManagerCreationWindow> _managerCreationWindowFactory;
+
+        public DataEntryService(Func<ManagerCreationWindow> managerCreationWindowFactory)
+        {
+            _managerCreationWindowFactory = managerCreationWindowFactory;
+        }
 
         public async Task<bool> TestConnectionAsync(string connectionString)
         {
@@ -41,7 +46,8 @@ namespace ThesisProjectARM.Services.Services
         {
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                string dbConnectionString = connectionString.Replace("master", "DB_THESIS");
+                using (SqlConnection connection = new SqlConnection(dbConnectionString))
                 {
                     await connection.OpenAsync();
                     if (!await AdminUserExistsAsync(connection))
