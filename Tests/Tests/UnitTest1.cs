@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
 using ThesisProjectARM.Services.Services;
+using ThesisProjectARM.Data;
 
 namespace ThesisProjectARM.Tests.Tests
 {

@@ -24,7 +24,6 @@ namespace ThesisProjectARM.UI.Views.Pages
         public DataVisualizationPage()
         {
             InitializeComponent();
-            this.DataContext = new DataVisualizationVM();
         }
     }
 }

@@ -23,7 +23,6 @@ namespace ThesisProjectARM.UI.Views.Windows
         public MainUIWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainUIWindowVM();
         }
     }
 }

@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         Title="FirstSetupWindow" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="ServerTextBox" Text="{Binding Server, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Server" />
-        <TextBox x:Name="DatabaseTextBox" Text="{Binding Database, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Database" />
-        <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Username" />
-        <PasswordBox x:Name="PasswordBox" Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Password" />
-        <Button Content="Setup" Command="{Binding SetupCommand}" />
+        <TextBox x:Name="ServerTextBox" Text="{Binding Server, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+        <TextBox x:Name="DatabaseTextBox" Text="{Binding Database, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+        <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+        <PasswordBox x:Name="PasswordBox" Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+        <Button Content="Setup" Command="{Binding SetupCommand}" Margin="10" />
     </Grid>
 </Window>

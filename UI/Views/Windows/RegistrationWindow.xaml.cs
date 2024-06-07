@@ -23,7 +23,6 @@ namespace ThesisProjectARM.UI.Views.Windows
         public RegistrationWindow()
         {
             InitializeComponent();
-            this.DataContext = new RegistrationVM();
         }
     }
 }

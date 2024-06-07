@@ -9,14 +9,5 @@ namespace ThesisProjectARM.Services.Services
 {
     public class WindowService : IWindowService
     {
-        public void OpenWindow(Window window)
-        {
-            window.ShowDialog();
-        }
-
-        public void CloseWindow(Window window)
-        {
-            window.Close();
-        }
     }
 }

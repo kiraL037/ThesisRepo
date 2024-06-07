@@ -4,15 +4,14 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-using ThesisProjectARM.Core.Interfaces;
 using System.Windows;
+using ThesisProjectARM.Core.Interfaces;
 using NLog;
-using 
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ThesisProjectARM.Services.Services
 {
-    internal class DataEntryService : IDatabaseService
+    public class DataEntryService : IDataEntryRepository
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -42,7 +41,6 @@ namespace ThesisProjectARM.Services.Services
         {
             try
             {
-                await DBInitializer.InitializeAsync(connectionString);
                 string dbConnectionString = connectionString.Replace("master", "DB_THESIS");
                 using (SqlConnection connection = new SqlConnection(dbConnectionString))
                 {
@@ -72,6 +70,15 @@ namespace ThesisProjectARM.Services.Services
             {
                 int adminCount = (int)await command.ExecuteScalarAsync();
                 return adminCount > 0;
+            }
+        }
+
+        private void OpenAdminCreationWindow(string connectionString)
+        {
+            var adminWindow = new AdminWindow(connectionString);
+            if (adminWindow.ShowDialog() != true)
+            {
+                Application.Current.Shutdown();
             }
         }
     }

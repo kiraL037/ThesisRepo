@@ -88,7 +88,7 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
-        public ICommand SetupCommand => new RelayCommand(async () => await SetupDatabase());
+        public ICommand SetupCommand => new RelayCommand(async _ => await SetupDatabase());
 
         private async Task SetupDatabase()
         {

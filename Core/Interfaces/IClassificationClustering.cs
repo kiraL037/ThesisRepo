@@ -9,6 +9,7 @@ namespace ThesisProjectARM.Core.Interfaces
 {
     public interface IClassificationClustering
     {
-        Task<object> KMeansClusteringAsync(DataTable data, string[] columnNames, int clusterCount);
+        Task<int[]> KMeansClusteringAsync(DataTable data, string[] columnNames, int clusterCount);
+        Task<string> ClassifyAsync(DataTable data, string[] columnNames, string targetColumnName, double[] newObject);
     }
 }

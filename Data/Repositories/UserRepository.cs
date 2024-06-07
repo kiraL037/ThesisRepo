@@ -23,7 +23,7 @@ namespace ThesisProjectARM.Data.Repositories
 
         public async Task<bool> AdminUserExistsAsync()
         {
-            string connectionString = Settings.Default.ConnectionString.Replace("master", "DB_THESIS");
+            string connectionString = ThesisProjectARM.UI.Properties.Settings.Default.ConnectionString.Replace("master", "DB_THESIS");
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -48,6 +48,7 @@ namespace ThesisProjectARM.Data.Repositories
                 throw;
             }
         }
+
         public async Task<User> GetUserByUsernameAsync(string username)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

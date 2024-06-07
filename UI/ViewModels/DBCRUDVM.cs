@@ -5,7 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ThesisProjectARM.Service.Service;
+using ThesisProjectARM.Core.Models;
+using ThesisProjectARM.Core.Interfaces;
 
 namespace UI.ViewModels
 {
@@ -14,7 +15,7 @@ namespace UI.ViewModels
         private readonly IDataInfo _dataInfo;
         public ObservableCollection<DynamicDataModel> Data { get; set; }
 
-        public MainViewModel(IDataInfo dataInfo)
+        public DBCRUDVM(IDataInfo dataInfo)
         {
             _dataInfo = dataInfo;
             Data = new ObservableCollection<DynamicDataModel>();

@@ -10,8 +10,9 @@
     <Grid>
         <DataGrid x:Name="dataGrid" AutoGenerateColumns="True" ItemsSource="{Binding SelectedData}"/>
 
-        <ListBox x:Name="analysisColumnsListBox" ItemsSource="{Binding Columns}" SelectionMode="Extended"
-                 SelectionChanged="AnalysisColumnsListBox_SelectionChanged"/>
+        <ListBox x:Name="AnalysisColumnsListBox" 
+                 SelectionChanged="AnalysisColumnsListBox_SelectionChanged">
+        </ListBox>
 
         <Button Content="Perform KMeans Clustering" Command="{Binding PerformKMeansClusteringCommand}" />
         <Button Content="Perform Regression Analysis" Command="{Binding PerformRegressionAnalysisCommand}" />

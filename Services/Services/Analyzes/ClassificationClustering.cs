@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ThesisProjectARM.Core.Interfaces;
+using Accord.MachineLearning;
+using Accord.MachineLearning.VectorMachines;
+using Accord.MachineLearning.VectorMachines.Learning;
+using Accord.Statistics.Kernels;
 
 namespace ThesisProjectARM.Services.Services.Analyzes
 {
@@ -37,7 +39,6 @@ namespace ThesisProjectARM.Services.Services.Analyzes
                 };
 
                 var svm = teacher.Learn(data, labels);
-
                 var predicted = svm.Decide(newObject);
                 return predicted.ToString();
             });

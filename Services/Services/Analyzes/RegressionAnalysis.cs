@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ThesisProjectARM.Core.Interfaces;
+using Microsoft.ML;
+using Microsoft.ML.Data;
 
 namespace ThesisProjectARM.Services.Services.Analyzes
 {
@@ -39,7 +39,7 @@ namespace ThesisProjectARM.Services.Services.Analyzes
         private ITransformer TrainModel(IDataView data, string dependentVariable, string[] independentVariables)
         {
             var pipeline = mlContext.Transforms.Concatenate("Features", independentVariables)
-                .Append(mlContext.Regression.Trainers.Sdca(labelColumnName: dependentVariable, maximumNumberOfIterations: 100));
+                .Append(mlContext.Regression.Trainers.Sdca(labelColumnName: "Label", maximumNumberOfIterations: 100));
             return pipeline.Fit(data);
         }
     }

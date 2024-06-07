@@ -20,10 +20,7 @@ namespace ThesisProjectARM.UI.Views.Pages
         public AnalysisPage()
         {
             InitializeComponent();
-
-            var classificationClustering = new ClassificationClustering(); // Предполагаем, что этот класс определен где-то
-            var regressionAnalysis = new RegressionAnalysis(); // Предполагаем, что этот класс определен где-то
-            analysisViewModel = new AnalysisVM(classificationClustering, regressionAnalysis);
+            analysisViewModel = new AnalysisVM();
             DataContext = analysisViewModel;
         }
 
@@ -35,7 +32,7 @@ namespace ThesisProjectARM.UI.Views.Pages
         private void AnalysisColumnsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             analysisViewModel.SelectedColumns.Clear();
-            foreach (var item in analysisColumnsListBox.SelectedItems)
+            foreach (var item in AnalysisColumnsListBox.SelectedItems)
             {
                 analysisViewModel.SelectedColumns.Add(item as string);
             }

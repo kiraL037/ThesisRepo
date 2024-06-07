@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -17,17 +18,38 @@ namespace ThesisProjectARM.UI.ViewModels
     {
         private readonly IClassificationClustering classificationClusteringService;
         private readonly IRegressionAnalysis regressionAnalysisService;
-        public DataTable SelectedData { get; set; }
+        private readonly StatisticalAnalysis statisticalAnalysisService;
+        private readonly TimeSeriesAnalysis timeSeriesAnalysisService;
+        private DataTable _selectedData;
+        private ObservableCollection<string> _selectedColumns;
 
-        public AnalysisVM(IClassificationClustering classificationClusteringService, IRegressionAnalysis regressionAnalysisService)
+        public AnalysisVM()
         {
-            this.classificationClusteringService = classificationClusteringService;
-            this.regressionAnalysisService = regressionAnalysisService;
+            classificationClusteringService = new ClassificationClustering();
+            regressionAnalysisService = new RegressionAnalysis();
+            statisticalAnalysisService = new StatisticalAnalysis();
+            timeSeriesAnalysisService = new TimeSeriesAnalysis();
+            _selectedColumns = new ObservableCollection<string>();
         }
 
-        public void LoadSelectedData(DataTable dataTable)
+        public DataTable SelectedData
         {
-            SelectedData = dataTable;
+            get => _selectedData;
+            set
+            {
+                _selectedData = value;
+                OnPropertyChanged(nameof(SelectedData));
+            }
+        }
+
+        public ObservableCollection<string> SelectedColumns
+        {
+            get => _selectedColumns;
+            set
+            {
+                _selectedColumns = value;
+                OnPropertyChanged(nameof(SelectedColumns));
+            }
         }
 
         public async Task PerformKMeansClusteringAsync(string[] columnNames, int clusterCount)
@@ -42,32 +64,32 @@ namespace ThesisProjectARM.UI.ViewModels
 
         public async Task<double> CalculateCorrelationAsync(string column1, string column2)
         {
-            return await Task.Run(() => CorrelationAnalysis.CalculateCorrelation(selectedData, column1, column2));
+            return await Task.Run(() => CorrelationAnalysis.CalculateCorrelation(SelectedData, column1, column2));
         }
 
         public async Task<double> CalculateMeanAsync(string columnName)
         {
-            return await Task.Run(() => StatisticalAnalysis.CalculateMean(selectedData, columnName));
+            return await Task.Run(() => statisticalAnalysisService.CalculateMean(SelectedData, columnName));
         }
 
         public async Task<double> CalculateMedianAsync(string columnName)
         {
-            return await Task.Run(() => StatisticalAnalysis.CalculateMedian(selectedData, columnName));
+            return await Task.Run(() => statisticalAnalysisService.CalculateMedian(SelectedData, columnName));
         }
 
         public async Task<double> CalculateStandardDeviationAsync(string columnName)
         {
-            return await Task.Run(() => StatisticalAnalysis.CalculateStandardDeviation(selectedData, columnName));
+            return await Task.Run(() => statisticalAnalysisService.CalculateStandardDeviation(SelectedData, columnName));
         }
 
         public async Task<double[]> ForecastTimeSeriesAsync(string columnName, int periods)
         {
-            return await Task.Run(() => TimeSeriesAnalysis.Forecast(selectedData, columnName, periods));
+            return await Task.Run(() => timeSeriesAnalysisService.Forecast(SelectedData, columnName, periods));
         }
 
         public async Task<(double[] seasonal, double[] trend)> DetectSeasonalPatternsAsync(string columnName)
         {
-            return await Task.Run(() => TimeSeriesAnalysis.SeasonalCyclicPatterns(selectedData, columnName));
+            return await Task.Run(() => timeSeriesAnalysisService.SeasonalCyclicPatterns(SelectedData, columnName));
         }
     }
 }

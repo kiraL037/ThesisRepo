@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ThesisProjectARM.Services.Services.Analyzes
 {
-    public class TimaSeriesAnalysis : ITimeSeriesAnalysis
+    public class TimeSeriesAnalysis : ITimeSeriesAnalysis
     {
         public double[] Forecast(DataTable data, string columnName, int periods)
         {

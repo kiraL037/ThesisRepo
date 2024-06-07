@@ -11,6 +11,7 @@ using ThesisProjectARM.UI.Views.Windows;
 using ThesisProjectARM.Services.Services;
 using ThesisProjectARM.Data;
 using UI.Properties;
+using ThesisProjectARM.Data.Repositories;
 
 namespace UI
 {
@@ -20,18 +21,18 @@ namespace UI
     public partial class App : Application
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly Container _container;
+        private readonly SimpleInjector.Container _container;
 
         public App()
         {
-            _container = new Container();
+            _container = new SimpleInjector.Container();
             ConfigureContainer();
         }
 
         private void ConfigureContainer()
         {
             _container.Register<IUserRepository, UserRepository>(Lifestyle.Singleton);
-            _container.Register<IDatabaseService, DBService>(Lifestyle.Singleton);
+            _container.Register<IDatabaseService, DataEntryService>(Lifestyle.Singleton);
             _container.Register<IWindowService, WindowService>(Lifestyle.Singleton);
             _container.Register<ManagerVM>(Lifestyle.Singleton);
             _container.Register<RegistrationVM>(Lifestyle.Singleton);
@@ -41,13 +42,16 @@ namespace UI
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            string connectionString = Settings.Default.ConnectionString;
-            if (string.IsNullOrEmpty(connectionString) || !await TestConnectionStringAsync(connectionString))
+            var dataEntryService = _container.GetInstance<IDataEntryRepository>();
+
+            string connectionString = UI.Properties.Settings.Default.ConnectionString;
+            if (string.IsNullOrEmpty(connectionString) || !await dataEntryService.TestConnectionAsync(connectionString))
             {
                 OpenDatabaseConnectionWindow();
-                connectionString = Settings.Default.ConnectionString;
+                connectionString = UI.Properties.Settings.Default.ConnectionString;
             }
-            await InitializeDatabaseAsync(connectionString);
+
+            await InitializeDatabaseAsync(dataEntryService, connectionString);
             ShowWelcomeWindow();
         }
 
@@ -57,20 +61,11 @@ namespace UI
             databaseConnectionWindow.ShowDialog();
         }
 
-        private async Task InitializeDatabaseAsync(string connectionString)
+        private async Task InitializeDatabaseAsync(IDataEntryRepository dataEntryService, string connectionString)
         {
             try
             {
-                await DBInitializer.InitializeAsync(connectionString);
-                string dbConnectionString = connectionString.Replace("master", "DB_THESIS");
-                using (SqlConnection connection = new SqlConnection(dbConnectionString))
-                {
-                    await connection.OpenAsync();
-                    if (!await AdminUserExistsAsync(connection))
-                    {
-                        OpenAdminCreationWindow(dbConnectionString);
-                    }
-                }
+                await dataEntryService.InitializeDatabaseAsync(connectionString);
             }
             catch (SqlException sqlEx)
             {
@@ -82,49 +77,8 @@ namespace UI
             {
                 Logger.Error(ex, "Ошибка инициализации базы данных");
                 MessageBox.Show($"Ошибка инициализации базы данных: {ex.Message}");
-                Settings.Default.ConnectionString = string.Empty;
-                Settings.Default.Save();
-                Shutdown();
-            }
-        }
-
-        private async Task<bool> TestConnectionStringAsync(string connectionString)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    await connection.OpenAsync();
-                    return true;
-                }
-            }
-            catch (SqlException sqlEx)
-            {
-                Logger.Error(sqlEx, "Ошибка тестирования строки подключения");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "Ошибка тестирования строки подключения");
-                return false;
-            }
-        }
-
-        private async Task<bool> AdminUserExistsAsync(SqlConnection connection)
-        {
-            string query = "SELECT COUNT(*) FROM Users WHERE IsAdmin = 1";
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                int adminCount = (int)await command.ExecuteScalarAsync();
-                return adminCount > 0;
-            }
-        }
-
-        private void OpenAdminCreationWindow(string connectionString)
-        {
-            var adminWindow = new AdminWindow(connectionString);
-            if (adminWindow.ShowDialog() != true)
-            {
+                UI.Properties.Settings.Default.ConnectionString = string.Empty;
+                UI.Properties.Settings.Default.Save();
                 Shutdown();
             }
         }
