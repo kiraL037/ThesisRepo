@@ -15,8 +15,10 @@
             <TextBlock Text="База данных" />
             <TextBox x:Name="DatabaseTextBox" Text="{Binding Database, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
 
-            <RadioButton x:Name="WindowsAuthRButton" Content="Windows Authentication" IsChecked="True" GroupName="AuthType"/>
-            <RadioButton x:Name="SqlServerAuthRButton" Content="SQL Server Authentication" IsChecked="False" GroupName="AuthType"/>
+            <ComboBox x:Name="AuthTypeComboBox" SelectionChanged="AuthTypeComboBox_SelectionChanged" Margin="10">
+                <ComboBoxItem Content="Windows Authentication" IsSelected="True"/>
+                <ComboBoxItem Content="SQL Server Authentication"/>
+            </ComboBox>
 
             <TextBlock Text="Пользователь" />
             <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="10" />

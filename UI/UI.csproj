@@ -74,6 +74,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\AdminWindowVM.cs" />
     <Compile Include="ViewModels\AnalysisVM.cs" />
     <Compile Include="ViewModels\AuthenticationWindowVM.cs" />

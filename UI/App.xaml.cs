@@ -14,6 +14,8 @@ using UI.Properties;
 using System.Configuration;
 using ThesisProjectARM.Data.Repositories;
 using System.Xml.Linq;
+using UI;
+using ThesisProjectARM.Core.Models;
 
 namespace UI
 {
@@ -23,7 +25,7 @@ namespace UI
     public partial class App : Application
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly SimpleInjector.Container _container;
+        public static SimpleInjector.Container _container;
 
         public App()
         {
@@ -34,25 +36,37 @@ namespace UI
         private void ConfigureContainer()
         {
             _container.Register<IUserRepository, UserRepository>(Lifestyle.Singleton);
+            _container.Register<IUserService, UserService>(Lifestyle.Singleton);
             _container.Register<IDatabaseService, DBService>(Lifestyle.Singleton);
             _container.Register<IWindowService, WindowService>(Lifestyle.Singleton);
             _container.Register<ManagerVM>(Lifestyle.Singleton);
             _container.Register<RegistrationVM>(Lifestyle.Singleton);
+            _container.Register<AuthenticationWindowVM>(Lifestyle.Singleton);
             _container.Register<SelectTableVM>(Lifestyle.Singleton);
-            _container.Register<ManagerWindow>(Lifestyle.Transient);
+            _container.Register<FirstSetupWindowVM>(Lifestyle.Singleton);
         }
 
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            var dataEntryService = _container.GetInstance<IDataEntryRepository>();
+            var dbService = _container.GetInstance<IDatabaseService>();
+            string connectionString = Settings.Default.ConnectionString;
 
-            string connectionString = UI.Properties.Settings.Default.ConnectionString;
-            if (string.IsNullOrEmpty(connectionString) || !await dataEntryService.TestConnectionAsync(connectionString))
+            if (string.IsNullOrEmpty(connectionString) || !await dbService.TestConnectionAsync(connectionString))
             {
-                OpenDatabaseConnectionWindow();
-                connectionString = UI.Properties.Settings.Default.ConnectionString;
+                OpenFirstSetupWindow();
+                connectionString = Settings.Default.ConnectionString;
             }
+            else
+            {
+                await InitializeDatabaseAsync(dbService, connectionString);
+                ShowWelcomeWindow();
+            }
+            RegisterWindows();
+        }
+
+        private void RegisterWindows()
+        {
             _container.Register<MainUIWindow>(Lifestyle.Transient);
             _container.Register<MainWindow>(Lifestyle.Transient);
             _container.Register<TipsWindow>(Lifestyle.Transient);
@@ -61,21 +75,19 @@ namespace UI
             _container.Register<FirstSetupWindow>(Lifestyle.Transient);
             _container.Register<ManagerWindow>(Lifestyle.Transient);
             _container.Register<DataEntry>(Lifestyle.Transient);
-            await InitializeDatabaseAsync(dataEntryService, connectionString);
-            ShowWelcomeWindow();
         }
 
-        private void OpenDatabaseConnectionWindow()
+        private void OpenFirstSetupWindow()
         {
-            var databaseConnectionWindow = new SelectTableDialog();
-            databaseConnectionWindow.ShowDialog();
+            var firstSetupWindow = _container.GetInstance<FirstSetupWindow>();
+            firstSetupWindow.ShowDialog();
         }
 
-        private async Task InitializeDatabaseAsync(IDataEntryRepository dataEntryService, string connectionString)
+        private async Task InitializeDatabaseAsync(IDatabaseService dbService, ConnectionModel connectionString)
         {
             try
             {
-                await dataEntryService.InitializeDatabaseAsync(connectionString);
+                await dbService.SetupDatabaseAsync(connectionString);
             }
             catch (SqlException sqlEx)
             {
@@ -93,6 +105,12 @@ namespace UI
             }
         }
 
+        private void ShowWelcomeWindow()
+        {
+            var welcomeWindow = _container.GetInstance<WelcomeWindow>();
+            welcomeWindow.ShowDialog();
+        }
+
         public void SaveConnectionString(string connectionString)
         {
             try
@@ -108,22 +126,14 @@ namespace UI
                 }
                 config.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("connectionStrings");
-
                 Settings.Default.ConnectionString = connectionString;
                 Settings.Default.Save();
-
                 MessageBox.Show("Connection string saved successfully.");
             }
             catch (ConfigurationErrorsException ex)
             {
                 MessageBox.Show("Error saving connection string: " + ex.Message);
             }
-        }
-
-        private void ShowWelcomeWindow()
-        {
-            var welcomeWindow = new WelcomeWindow();
-            welcomeWindow.ShowDialog();
         }
     }
 }

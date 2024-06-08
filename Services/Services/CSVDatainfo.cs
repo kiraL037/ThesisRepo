@@ -32,41 +32,45 @@ namespace ThesisProjectARM.Services.Services
             using (StreamReader reader = new StreamReader(filePath))
             {
                 string headerLine = await reader.ReadLineAsync();
-                string[] headers = headerLine.Split(',');
-
-                foreach (string header in headers)
+                if (!string.IsNullOrEmpty(headerLine))
                 {
-                    metadata.Columns.Add(new ColumnMetadata
+                    string[] headers = headerLine.Split(',');
+                    foreach (string header in headers)
                     {
-                        ColumnName = header,
-                        DataType = "string"
-                    });
+                        metadata.Columns.Add(new ColumnMetadata { ColumnName = header, DataType = "string" });
+                    }
                 }
             }
+
             return metadata;
         }
 
         public async Task<DataTable> GetDataAsync()
         {
             DataTable dataTable = new DataTable();
-
             using (StreamReader reader = new StreamReader(filePath))
             {
                 string headerLine = await reader.ReadLineAsync();
-                string[] headers = headerLine.Split(',');
-
-                foreach (string header in headers)
+                if (!string.IsNullOrEmpty(headerLine))
                 {
-                    dataTable.Columns.Add(new DataColumn(header));
-                }
+                    string[] headers = headerLine.Split(',');
+                    foreach (string header in headers)
+                    {
+                        dataTable.Columns.Add(header);
+                    }
 
-                while (!reader.EndOfStream)
-                {
-                    string line = await reader.ReadLineAsync();
-                    string[] fields = line.Split(',');
-                    dataTable.Rows.Add(fields);
+                    while (!reader.EndOfStream)
+                    {
+                        string dataLine = await reader.ReadLineAsync();
+                        if (!string.IsNullOrEmpty(dataLine))
+                        {
+                            string[] data = dataLine.Split(',');
+                            dataTable.Rows.Add(data);
+                        }
+                    }
                 }
             }
+
             return dataTable;
         }
     }

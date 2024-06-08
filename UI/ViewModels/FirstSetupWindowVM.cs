@@ -13,7 +13,7 @@ using ThesisProjectARM.Core.Interfaces;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
-    public class FirstSetupViewModel : INotifyPropertyChanged
+    public class FirstSetupWindowVM : INotifyPropertyChanged
     {
         private readonly IDatabaseService _databaseService;
         private string _server;
@@ -23,7 +23,7 @@ namespace ThesisProjectARM.UI.ViewModels
         private string _connectionString;
         private bool _isSetupComplete;
 
-        public FirstSetupViewModel(IDatabaseService databaseService)
+        public FirstSetupWindowVM(IDatabaseService databaseService)
         {
             _databaseService = databaseService;
         }
@@ -100,45 +100,31 @@ namespace ThesisProjectARM.UI.ViewModels
                 Password = Password
             };
 
-            try
-            {
-                IsSetupComplete = await _databaseService.SetupDatabaseAsync(connection);
-                if (IsSetupComplete)
-                {
-                    ConnectionString = _databaseService.BuildConnectionString(connection);
-                    MessageBox.Show("Setup successful. You can now start the application.", "Setup Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                    CloseWindow();
-                    WelcomeWindow welcomeWindow = new WelcomeWindow();
-                    welcomeWindow.Show();
-                }
-                else
-                {
-                    MessageBox.Show("Setup failed. Please check the server details and try again.", "Setup Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Setup failed. Error: {ex.Message}", "Setup Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+            _connectionString = _databaseService.BuildConnectionString(connection);
+            var result = await _databaseService.SetupDatabaseAsync(connection);
 
-        private void CloseWindow()
-        {
-            foreach (Window window in Application.Current.Windows)
+            if (result)
             {
-                if (window.DataContext == this)
-                {
-                    window.Close();
-                    break;
-                }
+                IsSetupComplete = true;
+                MessageBox.Show("Database setup successfully.");
+                CloseWindow();
+            }
+            else
+            {
+                MessageBox.Show("Failed to setup database. Please check your connection details.");
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void CloseWindow()
+        {
+            Application.Current.Windows.OfType<FirstSetupWindow>().FirstOrDefault()?.Close();
         }
     }
 }

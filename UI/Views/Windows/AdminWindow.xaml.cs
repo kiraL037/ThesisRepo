@@ -23,6 +23,7 @@ namespace ThesisProjectARM.UI.Views.Windows
         public AdminWindow()
         {
             InitializeComponent();
+            DataContext = new AdminWindowVM();
         }
     }
 }

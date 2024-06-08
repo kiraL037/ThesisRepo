@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ThesisProjectARM.Core.Interfaces
 {
     public interface IWindowService
     {
-        bool IsWindowsAuth();
-        void CreateManagerAccount();
-        void CloseWindow(bool? dialogResult = null);
-        void ShowMessage(string message);
+        void ShowWindow<T>() where T : Window, new();
+        void CloseWindow<T>() where T : Window;
     }
 }
-

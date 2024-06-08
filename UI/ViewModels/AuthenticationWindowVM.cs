@@ -7,6 +7,8 @@ using ThesisProjectARM.Core.Models;
 using System.Data;
 using ThesisProjectARM.UI.Views.Windows;
 using System.Windows;
+using ThesisProjectARM.Services.Services;
+using System.Linq;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
@@ -15,7 +17,6 @@ namespace ThesisProjectARM.UI.ViewModels
         private readonly IUserService _userService;
         private string _username;
         private string _password;
-        private bool _isAuthenticated;
 
         public AuthenticationWindowVM(IUserService userService)
         {
@@ -42,54 +43,33 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
-        public bool IsAuthenticated
-        {
-            get => _isAuthenticated;
-            set
-            {
-                _isAuthenticated = value;
-                OnPropertyChanged();
-            }
-        }
+        public ICommand LoginCommand => new RelayCommand(async _ => await Login());
 
-        public ICommand AuthenticateCommand => new RelayCommand(async (param) => await AuthenticateUser());
-
-        private async Task AuthenticateUser()
+        private async Task Login()
         {
-            IsAuthenticated = await _userService.AuthenticateUserAsync(Username, Password);
-            if (IsAuthenticated)
+            var result = await _userService.AuthenticateUserAsync(Username, Password);
+
+            if (result)
             {
-                // Логика при успешной аутентификации
-                MainUIWindow mainUIWindow = new MainUIWindow();
-                mainUIWindow.Show();
-                // Закрытие окна аутентификации
+                MessageBox.Show("User authenticated successfully.");
                 CloseWindow();
             }
             else
             {
-                // Логика при неуспешной аутентификации
-                MessageBox.Show("Invalid username or password.", "Authentication Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void CloseWindow()
-        {
-            // Закрытие текущего окна
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window.DataContext == this)
-                {
-                    window.Close();
-                    break;
-                }
+                MessageBox.Show("Failed to authenticate user.");
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void CloseWindow()
+        {
+            Application.Current.Windows.OfType<AuthenticationWindow>().FirstOrDefault()?.Close();
         }
     }
 }

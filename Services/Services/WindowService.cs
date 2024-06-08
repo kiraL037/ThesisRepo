@@ -7,47 +7,34 @@ using ThesisProjectARM.Core.Interfaces;
 using System.Windows;
 using SimpleInjector;
 
+
 namespace ThesisProjectARM.Services.Services
 {
     public class WindowService : IWindowService
     {
-        private readonly Func<FirstSetupWindow> _firstSetupWindowFactory;
-        private readonly Func<RegistrationWindow> _registrationWindowFactory;
+        private readonly Dictionary<Type, Type> _windows;
 
-        public WindowService(Func<FirstSetupWindow> firstSetupWindowFactory, Func<RegistrationWindow> registrationWindowFactory)
+        public WindowService()
         {
-            _firstSetupWindowFactory = firstSetupWindowFactory;
-            _registrationWindowFactory = registrationWindowFactory;
-        }
-
-        public bool IsWindowsAuth()
-        {
-            var window = _firstSetupWindowFactory();
-            return window.WindowsAuthRButton.IsChecked == true;
-        }
-
-        public void CreateManagerAccount()
-        {
-            Application.Current.Dispatcher.Invoke(() =>
+            _windows = new Dictionary<Type, Type>
             {
-                var registrationWindow = _registrationWindowFactory();
-                registrationWindow.ShowDialog();
-            });
+                { typeof(AuthenticationWindow), typeof(AuthenticationWindow) },
+                { typeof(RegistrationWindow), typeof(RegistrationWindow) },
+                { typeof(WelcomeWindow), typeof(WelcomeWindow) },
+                { typeof(MainWindow), typeof(MainWindow) }
+            };
         }
 
-        public void CloseWindow(bool? dialogResult = null)
+        public void ShowWindow<T>() where T : Window, new()
         {
-            var window = Application.Current.Windows[0];
-            if (window != null)
-            {
-                window.DialogResult = dialogResult;
-                window.Close();
-            }
+            var window = new T();
+            window.Show();
         }
 
-        public void ShowMessage(string message)
+        public void CloseWindow<T>() where T : Window
         {
-            MessageBox.Show(message);
+            var window = Application.Current.Windows.OfType<T>().FirstOrDefault();
+            window?.Close();
         }
     }
 }

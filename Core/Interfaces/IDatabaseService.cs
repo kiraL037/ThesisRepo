@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
 
 namespace ThesisProjectARM.Core.Interfaces
 {
@@ -11,5 +12,7 @@ namespace ThesisProjectARM.Core.Interfaces
     {
         Task<bool> SetupDatabaseAsync(ConnectionModel connection);
         string BuildConnectionString(ConnectionModel connection);
+        Task<bool> TestConnectionAsync(ConnectionModel connectionString);
+        Task<bool> AdminUserExistsAsync(SqlConnection connection);
     }
 }
