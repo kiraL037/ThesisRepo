@@ -39,6 +39,7 @@ namespace UI
             _container.Register<ManagerVM>(Lifestyle.Singleton);
             _container.Register<RegistrationVM>(Lifestyle.Singleton);
             _container.Register<SelectTableVM>(Lifestyle.Singleton);
+            _container.Register<ManagerWindow>(Lifestyle.Transient);
         }
 
         protected override async void OnStartup(StartupEventArgs e)

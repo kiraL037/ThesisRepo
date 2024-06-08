@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -29,15 +30,17 @@ namespace ThesisProjectARM.UI.ViewModels
 
         public DataPageVM()
         {
-            LoadDataCommand = new RelayCommand(async () => await LoadDataAsync());
+            LoadDataCommand = new RelayCommand(async param => await LoadDataAsync(param), param => CanLoadData(param));
         }
 
-        private async Task LoadDataAsync()
+        private bool CanLoadData(object param)
         {
-            // Assuming you have a method to get the file path from the main interface
-            string filePath = "path_to_your_csv_file"; // Replace with actual logic to get the file path
+            return param is string filePath && File.Exists(filePath);
+        }
 
-            if (File.Exists(filePath))
+        public async Task LoadDataAsync(object param)
+        {
+            if (param is string filePath && File.Exists(filePath))
             {
                 var csvDataInfo = new CSVDatainfo(filePath);
                 _dataTable = await csvDataInfo.GetDataAsync();

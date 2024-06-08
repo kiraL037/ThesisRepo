@@ -12,11 +12,11 @@ using ThesisProjectARM.Core.Models;
 
 namespace ThesisProjectARM.Services.Services
 {
-    internal class CSVDatainfo : IGetData
+    public class CSVDatainfo : IGetData
     {
         private string filePath;
 
-        public CSVDataInfo(string filePath)
+        public CSVDatainfo(string filePath)
         {
             this.filePath = filePath;
         }
@@ -39,12 +39,13 @@ namespace ThesisProjectARM.Services.Services
                     metadata.Columns.Add(new ColumnMetadata
                     {
                         ColumnName = header,
-                        DataType = "stryng"
+                        DataType = "string"
                     });
                 }
             }
             return metadata;
         }
+
         public async Task<DataTable> GetDataAsync()
         {
             DataTable dataTable = new DataTable();

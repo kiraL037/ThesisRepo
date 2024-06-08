@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Configuration;
+using ThesisProjectARM.Core.Models;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
@@ -28,7 +32,7 @@ namespace ThesisProjectARM.UI.ViewModels
             {
                 if (_loadItemsCommand == null)
                 {
-                    _loadItemsCommand = new RelayCommand(param => LoadItems(), param => CanLoadItems());
+                    _loadItemsCommand = new RelayCommand(async param => await LoadItemsAsync(), param => CanLoadItems());
                 }
                 return _loadItemsCommand;
             }
@@ -40,14 +44,34 @@ namespace ThesisProjectARM.UI.ViewModels
             return true;
         }
 
-        private void LoadItems()
+        private async Task LoadItemsAsync()
         {
-            // Logic to load items
+            string connectionString = ConfigurationManager.ConnectionStrings["ThesisDB"].ConnectionString;
+            string query = "SELECT Name, Description FROM Users";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                await connection.OpenAsync();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                var items = new ObservableCollection<DynamicDataModel>();
+                while (await reader.ReadAsync())
+                {
+                    var model = new DynamicDataModel();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        model.Data[reader.GetName(i)] = reader.GetValue(i);
+                    }
+                    items.Add(model);
+                }
+                ManagerItems = items;
+            }
         }
 
         public ManagerVM()
         {
-            ManagerItems = new ObservableCollection<ManagerItem>();
+            ManagerItems = new ObservableCollection<DynamicDataModel>();
         }
     }
 

@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 using System.Windows;
 using ThesisProjectARM.Core.Interfaces;
 using NLog;
+using ThesisProjectARM.UI.Views.Windows;
 
 namespace ThesisProjectARM.Services.Services
 {
     public class DataEntryService : IDataEntryRepository
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly Func<ManagerCreationWindow> _managerCreationWindowFactory;
+        private readonly Func<ManagerWindow> _managerCreationWindowFactory;
 
-        public DataEntryService(Func<ManagerCreationWindow> managerCreationWindowFactory)
+        public DataEntryService(Func<ManagerWindow> managerCreationWindowFactory)
         {
             _managerCreationWindowFactory = managerCreationWindowFactory;
         }
