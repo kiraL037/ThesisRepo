@@ -16,6 +16,7 @@ using Services.Services;
 using UI.Views.Pages;
 using UI.Views.Windows;
 using UI.ViewModels;
+using static UI.App;
 
 namespace UI.ViewModels
 {
@@ -28,6 +29,10 @@ namespace UI.ViewModels
         private DBCRUDVM _dbCrudVm;
         private string _selectedTableName;
         private string _connectionString;
+        private readonly IDataVisualizationVMFactory _dataVisualizationVMFactory;
+        private readonly IDBCRUDVMFactory _dbCrudVmFactory;
+        private readonly IDataPageFactory _dataPageFactory;
+        private readonly IAnalysisVMFactory _analysisVmFactory;
 
         public DataTable DataTable
         {
@@ -53,8 +58,17 @@ namespace UI.ViewModels
         public ICommand EditDataCommand { get; }
         public ICommand DeleteDataCommand { get; }
 
-        public MainUIVM()
+
+        public MainUIVM(IDataVisualizationVMFactory dataVisualizationVMFactory,
+                        IDBCRUDVMFactory dbCrudVmFactory,
+                        IDataPageFactory dataPageFactory,
+                        IAnalysisVMFactory analysisVmFactory)
         {
+            _dataVisualizationVMFactory = dataVisualizationVMFactory;
+            _dbCrudVmFactory = dbCrudVmFactory;
+            _dataPageFactory = dataPageFactory;
+            _analysisVmFactory = analysisVmFactory;
+
             DataCollection = new ObservableCollection<DynamicDataModel>();
             _dbCHService = new DBCHService();
 
@@ -249,8 +263,7 @@ namespace UI.ViewModels
         private void NavigateToVisualizationPage()
         {
             var visualizationPage = new DataVisualizationPage();
-            var dataVisualizer = new DataVisualizer(); 
-            var visualizationVM = new DataVisualizationVM(dataVisualizer, DataTable);
+            var visualizationVM = _dataVisualizationVMFactory.Create(DataTable);
             visualizationPage.DataContext = visualizationVM;
             NavigateToPage(visualizationPage);
         }
@@ -282,6 +295,7 @@ namespace UI.ViewModels
                 return null;
             }
         }
+
 
         protected new void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

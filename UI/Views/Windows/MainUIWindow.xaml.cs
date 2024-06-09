@@ -12,7 +12,6 @@ namespace UI.Views.Windows
         public MainUIWindow()
         {
             InitializeComponent();
-            DataContext = new MainUIVM();
         }
     }
 }

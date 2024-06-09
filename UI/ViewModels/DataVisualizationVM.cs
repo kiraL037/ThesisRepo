@@ -5,12 +5,13 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static UI.App;
 
 namespace UI.ViewModels
 {
     public class DataVisualizationVM : ViewModelBase
     {
-        private readonly IDataVisualizer _dataVisualizerService;
+        private readonly IDataVisualizer _dataVisualizer;
         private DataTable _dataTable;
         private string _selectedColumnName;
         private PlotModel _plotModel;
@@ -38,9 +39,9 @@ namespace UI.ViewModels
 
         public ICommand VisualizeCommand { get; }
 
-        public DataVisualizationVM(IDataVisualizer dataVisualizerService, DataTable dataTable)
+        public DataVisualizationVM(IDataVisualizer dataVisualizer, DataTable dataTable)
         {
-            _dataVisualizerService = dataVisualizerService;
+            _dataVisualizer = dataVisualizer;
             _dataTable = dataTable;
             ColumnNames = new ObservableCollection<string>(dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
             VisualizeCommand = new RelayCommand(async (param) => await VisualizeData());
@@ -50,7 +51,7 @@ namespace UI.ViewModels
         {
             if (!string.IsNullOrEmpty(_selectedColumnName))
             {
-                PlotModel = _dataVisualizerService.PlotData(_dataTable, _selectedColumnName);
+                PlotModel = _dataVisualizer.PlotData(_dataTable, _selectedColumnName);
             }
         }
     }

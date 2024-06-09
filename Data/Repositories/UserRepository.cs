@@ -17,7 +17,6 @@ namespace Data.Repositories
             _connectionString = connectionString;
         }
 
-
         public async Task<bool> AdminUserExistsAsync()
         {
             try
