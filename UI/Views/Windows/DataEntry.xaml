@@ -9,7 +9,7 @@
     <Grid>
         <StackPanel Margin="10" VerticalAlignment="Bottom" HorizontalAlignment="Center">
             <ItemsControl x:Name="FieldsPanel"/>
-            <Button Content="Сохранить" Click="Save_Click" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            <Button Content="Сохранить" Click="Save_Click" Style="{StaticResource SecondaryButtonStyle}" Height="30" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
         </StackPanel>
     </Grid>
 </Window>

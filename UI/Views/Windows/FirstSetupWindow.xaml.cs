@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using ThesisProjectARM.Core.Models;
+using ThesisProjectARM.UI.ViewModels;
 
 namespace ThesisProjectARM.UI.Views.Windows
 {
@@ -7,9 +9,13 @@ namespace ThesisProjectARM.UI.Views.Windows
     /// </summary>
     public partial class FirstSetupWindow : Window
     {
-        public FirstSetupWindow()
+        private readonly FirstSetupWindowVM _viewModel;
+
+        public FirstSetupWindow(FirstSetupWindowVM viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
     }
 }

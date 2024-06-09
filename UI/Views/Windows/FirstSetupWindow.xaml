@@ -8,28 +8,25 @@
         Title="FirstSetupWindow" Height="450" Width="800">
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-
             <TextBlock Text="Сервер"/>
             <TextBox x:Name="ServerTextBox" Text="{Binding Server, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
 
             <TextBlock Text="База данных" />
             <TextBox x:Name="DatabaseTextBox" Text="{Binding Database, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
 
-            <ComboBox x:Name="AuthTypeComboBox" SelectionChanged="AuthTypeComboBox_SelectionChanged" Margin="10">
-                <ComboBoxItem Content="Windows Authentication" IsSelected="True"/>
+            <TextBlock Text="Тип аутентификации"/>
+            <ComboBox x:Name="AuthTypeComboBox" SelectedIndex="{Binding AuthType, UpdateSourceTrigger=PropertyChanged}" Margin="10">
+                <ComboBoxItem Content="Windows Authentication"/>
                 <ComboBoxItem Content="SQL Server Authentication"/>
             </ComboBox>
 
-            <TextBlock Text="Пользователь" />
-            <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+            <TextBlock Text="Пользователь" Visibility="{Binding IsSqlAuthSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="10" Visibility="{Binding IsSqlAuthSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-            <TextBlock Text="Пароль"/>
-            <PasswordBox x:Name="PasswordBox" Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+            <TextBlock Text="Пароль" Visibility="{Binding IsSqlAuthSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <PasswordBox x:Name="PasswordBox" Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="10" Visibility="{Binding IsSqlAuthSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-            <TextBlock Text="Повторите пароль"/>
-            <PasswordBox x:Name="ConfirmPasswordBox" Width="200" Margin="10" Tag="Подтвердите пароль" Foreground="Gray" GotFocus="Window_Loaded" LostFocus="Window_Loaded" IsEnabled="{Binding ElementName=SqlServerAuthRButton, Path=IsChecked}"/>
-
-            <Button Content="Setup" Command="{Binding SetupCommand}" Margin="10" />
+            <Button Content="Подключить" Command="{Binding SetupCommand}" Margin="10" />
         </StackPanel>
     </Grid>
 </Window>

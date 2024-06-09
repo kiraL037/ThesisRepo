@@ -24,6 +24,7 @@ namespace UI
     /// </summary>
     public partial class App : Application
     {
+
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public static SimpleInjector.Container _container;
 
@@ -55,7 +56,6 @@ namespace UI
             if (string.IsNullOrEmpty(connectionString) || !await dbService.TestConnectionAsync(connectionString))
             {
                 OpenFirstSetupWindow();
-                connectionString = Settings.Default.ConnectionString;
             }
             else
             {
@@ -83,11 +83,14 @@ namespace UI
             firstSetupWindow.ShowDialog();
         }
 
-        private async Task InitializeDatabaseAsync(IDatabaseService dbService, ConnectionModel connectionString)
+        private async Task InitializeDatabaseAsync(IDatabaseService dbService, string connectionString)
         {
             try
             {
-                await dbService.SetupDatabaseAsync(connectionString);
+                await dbService.SetupDatabaseAsync(new ConnectionModel
+                {
+                    ConnectionString = connectionString
+                });
             }
             catch (SqlException sqlEx)
             {
@@ -109,31 +112,6 @@ namespace UI
         {
             var welcomeWindow = _container.GetInstance<WelcomeWindow>();
             welcomeWindow.ShowDialog();
-        }
-
-        public void SaveConnectionString(string connectionString)
-        {
-            try
-            {
-                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                if (config.ConnectionStrings.ConnectionStrings["MyConnectionString"] != null)
-                {
-                    config.ConnectionStrings.ConnectionStrings["MyConnectionString"].ConnectionString = connectionString;
-                }
-                else
-                {
-                    config.ConnectionStrings.ConnectionStrings.Add(new ConnectionStringSettings("MyConnectionString", connectionString, "System.Data.SqlClient"));
-                }
-                config.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection("connectionStrings");
-                Settings.Default.ConnectionString = connectionString;
-                Settings.Default.Save();
-                MessageBox.Show("Connection string saved successfully.");
-            }
-            catch (ConfigurationErrorsException ex)
-            {
-                MessageBox.Show("Error saving connection string: " + ex.Message);
-            }
         }
     }
 }

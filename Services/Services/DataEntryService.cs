@@ -21,27 +21,7 @@ namespace ThesisProjectARM.Services.Services
             _managerCreationWindowFactory = managerCreationWindowFactory;
         }
 
-        public async Task<bool> TestConnectionAsync(string connectionString)
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    await connection.OpenAsync();
-                    return true;
-                }
-            }
-            catch (SqlException sqlEx)
-            {
-                Logger.Error(sqlEx, "Ошибка тестирования строки подключения");
-                return false;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "Ошибка тестирования строки подключения");
-                return false;
-            }
-        }
+        
 
         public async Task InitializeDatabaseAsync(string connectionString)
         {

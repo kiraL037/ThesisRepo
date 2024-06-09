@@ -19,6 +19,7 @@ namespace ThesisProjectARM.UI.ViewModels
         private string _username;
         private string _password;
         private string _confirmPassword;
+        private bool isAdmin = false;
 
         public RegistrationWindowVM(IUserService userService)
         {
@@ -65,7 +66,7 @@ namespace ThesisProjectARM.UI.ViewModels
                 return;
             }
 
-            var result = await _userService.RegisterUserAsync(Username, Password);
+            var result = await _userService.RegisterUserAsync(Username, Password, isAdmin);
 
             if (result)
             {

@@ -12,7 +12,7 @@ namespace ThesisProjectARM.Core.Interfaces
     {
         Task<bool> SetupDatabaseAsync(ConnectionModel connection);
         string BuildConnectionString(ConnectionModel connection);
-        Task<bool> TestConnectionAsync(ConnectionModel connectionString);
+        Task<bool> TestConnectionAsync(string connectionString);
         Task<bool> AdminUserExistsAsync(SqlConnection connection);
     }
 }

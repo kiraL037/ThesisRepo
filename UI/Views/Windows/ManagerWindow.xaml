@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="ManagerWindow" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="UsersDataGrid" DataContext="{Binding Username}" AutoGenerateColumns="True" Margin="0,115,0,0"/>
+        <DataGrid x:Name="UsersDataGrid" DataContext="{Binding Username}" Style="{StaticResource DataGridStyle}" AutoGenerateColumns="True" Margin="0,115,0,0"/>
     </Grid>
 </Window>

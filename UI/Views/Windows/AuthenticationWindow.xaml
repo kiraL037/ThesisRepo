@@ -14,8 +14,8 @@
             <Label Content="Пароль" HorizontalAlignment="Center" Margin="0,5,0,5"/>
             <PasswordBox Password="{Binding Password}" Margin="10"/>
 
-            <Button Content="Войти" Command="{Binding LoginCommand}" Margin="10" />
-            <Button Content="Зарегистрироваться" Command="{Binding OpenRegistrationWindow}" Margin="10"/>
+            <Button Content="Войти" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding LoginCommand}" Margin="10" />
+            <Button Content="Зарегистрироваться" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding OpenRegistrationWindow}" Margin="10"/>
         </StackPanel>
     </Grid>
 </Window>

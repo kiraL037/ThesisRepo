@@ -10,64 +10,68 @@ namespace ThesisProjectARM.Services.Services
     public class DBService : IDatabaseService
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly Func<ManagerWindow> _managerCreationWindowFactory;
-
-        public DBService(Func<ManagerWindow> managerCreationWindowFactory)
-        {
-            _managerCreationWindowFactory = managerCreationWindowFactory;
-        }
 
         public async Task<bool> SetupDatabaseAsync(ConnectionModel connection)
         {
+            return await ExecuteDatabaseCommandAsync(connection.ConnectionString, async (conn) =>
+            {
+                await CreateDatabaseIfNotExistsAsync(conn, connection.Database);
+                await CreateUsersTableIfNotExistsAsync(conn);
+            });
+        }
+
+        private async Task<bool> ExecuteDatabaseCommandAsync(string connectionString, Func<SqlConnection, Task> command)
+        {
             try
             {
-                var connectionString = BuildConnectionString(connection);
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     await conn.OpenAsync();
-
-                    string createDbQuery = $"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{connection.Database}') CREATE DATABASE [{connection.Database}]";
-                    using (SqlCommand command = new SqlCommand(createDbQuery, conn))
-                    {
-                        await command.ExecuteNonQueryAsync();
-                    }
-
-                    string useDatabaseQuery = $"USE [{connection.Database}]";
-                    using (SqlCommand command = new SqlCommand(useDatabaseQuery, conn))
-                    {
-                        await command.ExecuteNonQueryAsync();
-                    }
-
-                    string createTableQuery = @"
-                        IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Users')
-                        CREATE TABLE Users (
-                            Id INT PRIMARY KEY IDENTITY,
-                            Username NVARCHAR(50) NOT NULL,
-                            PasswordHash NVARCHAR(64) NOT NULL,
-                            IsAdmin BIT NOT NULL
-                        )";
-                    using (SqlCommand command = new SqlCommand(createTableQuery, conn))
-                    {
-                        await command.ExecuteNonQueryAsync();
-                    }
+                    await command(conn);
                 }
                 return true;
             }
             catch (SqlException sqlEx)
             {
                 Logger.Error(sqlEx, "Ошибка инициализации базы данных");
-                throw;
+                return false;
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "Ошибка инициализации базы данных");
-                throw;
+                return false;
             }
         }
 
         public string BuildConnectionString(ConnectionModel connection)
         {
             return $"Server={connection.Server};Database={connection.Database};User Id={connection.Username};Password={connection.Password};";
+        }
+
+        private async Task CreateDatabaseIfNotExistsAsync(SqlConnection conn, string databaseName)
+        {
+            string createDbQuery = $"IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = '{databaseName}') CREATE DATABASE [{databaseName}]";
+            using (SqlCommand command = new SqlCommand(createDbQuery, conn))
+            {
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+
+        private async Task CreateUsersTableIfNotExistsAsync(SqlConnection conn)
+        {
+            string createTableQuery = @"
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Users')
+                CREATE TABLE Users (
+                    Id INT PRIMARY KEY IDENTITY,
+                    Username NVARCHAR(50) NOT NULL,
+                    PasswordHash NVARCHAR(256) NOT NULL,
+                    Salt NVARCHAR(256) NOT NULL,
+                    IsAdmin BIT NOT NULL
+                )";
+            using (SqlCommand command = new SqlCommand(createTableQuery, conn))
+            {
+                await command.ExecuteNonQueryAsync();
+            }
         }
 
         public async Task<bool> TestConnectionAsync(string connectionString)
@@ -92,7 +96,7 @@ namespace ThesisProjectARM.Services.Services
             }
         }
 
-        private async Task<bool> AdminUserExistsAsync(SqlConnection connection)
+        public async Task<bool> AdminUserExistsAsync(SqlConnection connection)
         {
             string query = "SELECT COUNT(*) FROM Users WHERE IsAdmin = 1";
             using (SqlCommand command = new SqlCommand(query, connection))

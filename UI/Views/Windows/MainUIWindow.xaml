@@ -10,7 +10,7 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Файл">
-                    <MenuItem Header="Открыть" Command="{Binding LoadDataCommand}"/>
+                    <MenuItem Header="Открыть" Command="{Binding LoadDataCommand}" />
                     <MenuItem Header="Сохранить" Command="{Binding SaveDataCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Помощь">
@@ -19,10 +19,10 @@
                 <MenuItem Header="Выход" Command="{Binding ExitCommand}"/>
             </Menu>
             <ToolBarTray DockPanel.Dock="Top">
-                <ToolBar Background="LightGreen">
-                    <Button Content="Загрузить файл" Command="{Binding LoadDataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
-                    <Button Content="Сохранить данные" Command="{Binding SaveDataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
-                    <Button Content="Подключить базу данных" Command="{Binding ConnectToDBCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+                <ToolBar Background="MediumSeaGreen">
+                    <Button Content="Загрузить файл" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
+                    <Button Content="Сохранить данные" Command="{Binding SaveDataCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
+                    <Button Content="Подключить базу данных" Command="{Binding ConnectToDBCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
                 </ToolBar>
             </ToolBarTray>
             <StackPanel Background="LightGreen" Height="356">
@@ -32,7 +32,7 @@
                 <Button Content="Данные" Command="{Binding DataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
             </StackPanel>
             <Frame x:Name="MainFrame" />
-            <DataGrid ItemsSource="{Binding DataCollection}" AutoGenerateColumns="True" Margin="10"/>
+            <DataGrid ItemsSource="{Binding DataCollection}" Style="{StaticResource DataGridStyle}" AutoGenerateColumns="True" Margin="10"/>
         </DockPanel>
     </Grid>
 </Window>

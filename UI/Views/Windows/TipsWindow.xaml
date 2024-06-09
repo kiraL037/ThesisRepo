@@ -15,7 +15,7 @@
                 <TextBlock Text="3. Убедитесь, что разрешены удаленные подключения к SQL Server." TextWrapping="Wrap" Margin="0,0,0,5"/>
                 <TextBlock Text="4. Проверьте настройки брандмауэра, чтобы SQL Server не был заблокирован." TextWrapping="Wrap" Margin="0,0,0,5"/>
                 <TextBlock Text="5. Убедитесь, что включены необходимые сетевые протоколы в SQL Server Configuration Manager." TextWrapping="Wrap" Margin="0,0,0,5"/>
-                <Button Content="Назад" Command="{Binding BackToWelcomeCommand}"/>
+                <Button Content="Назад" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding BackToWelcomeCommand}"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -8,9 +8,9 @@
         Title="WelcomeWindow" Height="450" Width="800">
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="Приветствую!" HorizontalAlignment="Center" TextAlignment="Center" FontSize="36" Margin="0,0,0,20" Height="50"/>
-            <TextBlock Text="Для начала работы войдите в приложение" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
-            <Button Content="Начать работу" HorizontalAlignment="Center" VerticalAlignment="Center" Click="StartButton_Click"/>
+            <TextBlock Text="Приветствую!" HorizontalAlignment="Center" Style="{StaticResource TextBlockStyle}" TextAlignment="Center" FontSize="36" Margin="0,0,0,20" Height="50"/>
+            <TextBlock Text="Для начала работы войдите в приложение" Style="{StaticResource TextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+            <Button Content="Начать работу" Style="{StaticResource BaseButtonStyle}" Click="StartButton_Click"/>
             <TextBlock Text="Подсказки" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"/>
         </StackPanel>
     </Grid>

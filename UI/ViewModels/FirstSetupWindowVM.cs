@@ -10,6 +10,8 @@ using System.Windows.Input;
 using ThesisProjectARM.UI.Views.Windows;
 using ThesisProjectARM.Core.Models;
 using ThesisProjectARM.Core.Interfaces;
+using System.Configuration;
+using UI.Properties;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
@@ -22,10 +24,12 @@ namespace ThesisProjectARM.UI.ViewModels
         private string _password;
         private string _connectionString;
         private bool _isSetupComplete;
+        private int _authType;
 
         public FirstSetupWindowVM(IDatabaseService databaseService)
         {
             _databaseService = databaseService;
+            AuthType = 0; // Default to Windows Authentication
         }
 
         public string Server
@@ -88,6 +92,19 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
+        public int AuthType
+        {
+            get => _authType;
+            set
+            {
+                _authType = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsSqlAuthSelected));
+            }
+        }
+
+        public bool IsSqlAuthSelected => AuthType == 1;
+
         public ICommand SetupCommand => new RelayCommand(async _ => await SetupDatabase());
 
         private async Task SetupDatabase()
@@ -96,17 +113,24 @@ namespace ThesisProjectARM.UI.ViewModels
             {
                 Server = Server,
                 Database = Database,
-                Username = Username,
-                Password = Password
+                Username = IsSqlAuthSelected ? Username : null,
+                Password = IsSqlAuthSelected ? Password : null,
+                ConnectionString = _databaseService.BuildConnectionString(new ConnectionModel
+                {
+                    Server = Server,
+                    Database = Database,
+                    Username = IsSqlAuthSelected ? Username : null,
+                    Password = IsSqlAuthSelected ? Password : null
+                })
             };
 
-            _connectionString = _databaseService.BuildConnectionString(connection);
             var result = await _databaseService.SetupDatabaseAsync(connection);
 
             if (result)
             {
                 IsSetupComplete = true;
                 MessageBox.Show("Database setup successfully.");
+                SaveConnectionString(connection.ConnectionString);
                 CloseWindow();
             }
             else
@@ -115,16 +139,23 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void SaveConnectionString(string connectionString)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Settings.Default.ConnectionString = connectionString;
+            Settings.Default.Save();
         }
 
         private void CloseWindow()
         {
-            Application.Current.Windows.OfType<FirstSetupWindow>().FirstOrDefault()?.Close();
+            var window = Application.Current.Windows.OfType<FirstSetupWindow>().FirstOrDefault();
+            window?.Close();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

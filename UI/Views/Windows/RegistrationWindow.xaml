@@ -8,13 +8,13 @@
         Title="RegistrationWindow" Height="450" Width="800">
     <Grid DataContext="{Binding RegistrationVM, Source={StaticResource Locator}}">
         <StackPanel Margin="296,102,295,10" Width="209">
-            <Label Content="Логин" HorizontalAlignment="Center" Margin="0,10,0,5"/>
-            <TextBox Text="{Binding Username}" Margin="10"/>
+            <Label Content="Логин" HorizontalAlignment="Center" Margin="0,10,0,5" Style="{StaticResource LabelStyle}"/>
+            <TextBox Text="{Binding Username}" Margin="10" Style="{StaticResource TextBoxStyle}"/>
 
-            <Label Content="Пароль" HorizontalAlignment="Center" Margin="0,5,0,5"/>
+            <Label Content="Пароль" HorizontalAlignment="Center" Margin="0,5,0,5" Style="{StaticResource LabelStyle}"/>
             <PasswordBox Password="{Binding Password}" Margin="10"/>
             
-            <Label Content="Подтвердите пароль" HorizontalAlignment="Center" Margin="0,5,0,5"/>
+            <Label Content="Подтвердите пароль" HorizontalAlignment="Center" Margin="0,5,0,5" Style="{StaticResource LabelStyle}"/>
             <PasswordBox Password="{Binding ConfirmPassword}" Margin="10"/>
             
             <Button Content="Зарегистрироваться" Style="{StaticResource PrimaryButtonStyle}" Command="{Binding RegisterCommand}"/>
