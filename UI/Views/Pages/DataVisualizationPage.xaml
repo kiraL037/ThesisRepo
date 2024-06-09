@@ -9,6 +9,13 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DataVisualizationPage">
     <Grid>
-        <oxy:PlotView x:Name="PlotView" Model="{Binding PlotModel}"/>
+        <StackPanel>
+            <oxy:PlotView x:Name="PlotView" Model="{Binding PlotModel}" Margin="10"/>
+            <Button Content="Visualize" Width="100" Margin="10"
+                    Command="{Binding VisualizeCommand}"/>
+            <ComboBox x:Name="ColumnSelector" Width="200" Margin="10"
+                        ItemsSource="{Binding ColumnNames}" 
+                        SelectedItem="{Binding SelectedColumnName}"/>
+        </StackPanel>
     </Grid>
 </Page>

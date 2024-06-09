@@ -24,5 +24,13 @@ namespace ThesisProjectARM.UI.Views.Windows
         {
             InitializeComponent();
         }
+
+        public void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is RegistrationVM viewModel)
+            {
+                viewModel.Password = ((PasswordBox)sender).Password;
+            }
+        }
     }
 }

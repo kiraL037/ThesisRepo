@@ -13,10 +13,10 @@
             <TextBox x:Name="UsernameTextBox" Text="{Binding Username}" Style="{StaticResource TextBoxStyle}" TextWrapping="Wrap" Width="120" HorizontalAlignment="Center" Margin="0,5,0,5"/>
 
             <Label Content="Пароль" HorizontalAlignment="Center" Margin="0,5,0,5" Style="{StaticResource LabelStyle}"/>
-            <PasswordBox x:Name="PasswordBox" Password="{Binding Password}" Width="120" Margin="0,5,0,5"/>
+            <PasswordBox x:Name="PasswordBox" PasswordChanged="PasswordBox_PasswordChanged" Width="120" Margin="0,5,0,5"/>
 
             <Label Content="Подтвердите пароль" HorizontalAlignment="Center" Margin="0,5,0,5" Style="{StaticResource LabelStyle}"/>
-            <PasswordBox x:Name="ConfirmPasswordBox" Password="{Binding ConfirmPassword}" Width="200" Margin="10"/>
+            <PasswordBox x:Name="ConfirmPasswordBox" PasswordChanged="PasswordBox_ConfirmPasswordChanged" Width="120" Margin="10"/>
 
             <Button Content="Зарегистрироваться" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding RegisterCommand}"/>
         </StackPanel>

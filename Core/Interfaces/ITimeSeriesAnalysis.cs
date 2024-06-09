@@ -9,7 +9,7 @@ namespace Core.Interfaces
 {
     public interface ITimeSeriesAnalysis
     {
-        double[] Forecast(DataTable data, string columnName, int periods);
-        (double[] seasonal, double[] trend) SeasonalCyclicPatterns(DataTable data, string columnName);
+        Task<double[]> Forecast(DataTable data, string columnName, int periods);
+        Task<(double[] seasonal, double[] trend)> SeasonalCyclicPatterns(DataTable data, string columnName);
     }
 }

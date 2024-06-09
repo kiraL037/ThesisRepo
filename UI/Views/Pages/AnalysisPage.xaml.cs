@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -15,27 +16,18 @@ namespace ThesisProjectARM.UI.Views.Pages
     /// </summary>
     public partial class AnalysisPage : Page
     {
-        private readonly AnalysisVM analysisViewModel;
+        private AnalysisVM viewModel;
 
         public AnalysisPage()
         {
             InitializeComponent();
-            analysisViewModel = new AnalysisVM();
-            DataContext = analysisViewModel;
+            viewModel = DataContext as AnalysisVM;
         }
 
-        public void LoadData(DataTable dataTable)
+        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            analysisViewModel.SelectedData = dataTable;
-        }
-
-        private void AnalysisColumnsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            analysisViewModel.SelectedColumns.Clear();
-            foreach (var item in AnalysisColumnsListBox.SelectedItems)
-            {
-                analysisViewModel.SelectedColumns.Add(item as string);
-            }
+            var selectedItems = ((ListBox)sender).SelectedItems;
+            viewModel.SelectedColumns = new ObservableCollection<string>(selectedItems.Cast<string>());
         }
     }
 }

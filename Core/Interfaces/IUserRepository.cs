@@ -11,7 +11,7 @@ namespace ThesisProjectARM.Core.Interfaces
     {
         Task<User> GetUserByUsernameAsync(string username);
         Task CreateUserAsync(User user);
-        Task CreateUserAsync(string username, string hashedPassword, string salt, bool isAdmin); // Overloaded method
+        Task CreateUserAsync(string username, string hashedPassword, string salt, bool isAdmin);
         Task<bool> UserExistsAsync(string username);
     }
 }

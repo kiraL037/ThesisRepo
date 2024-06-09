@@ -1,13 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
+using System.Windows.Input;
+using ThesisProjectARM.UI.Views.Windows;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
     public class WelcomeWindowVM : ViewModelBase
     {
+        public ICommand StartCommand { get; }
+        public ICommand ShowTipsCommand { get; }
+
+        public WelcomeWindowVM()
+        {
+            StartCommand = new RelayCommand(OnStart);
+            ShowTipsCommand = new RelayCommand(OnShowTips);
+        }
+
         private string _welcomeMessage;
         public string WelcomeMessage
         {
@@ -19,9 +26,20 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
-        public WelcomeWindowVM()
+        private void OnStart(object parameter)
         {
-            WelcomeMessage = "Welcome to the application!";
+            // Открываем окно авторизации
+            var authWindow = new AuthenticationWindow();
+            authWindow.Show();
+            Application.Current.MainWindow.Close();
+        }
+
+        private void OnShowTips(object parameter)
+        {
+            // Открываем окно подсказок
+            var tipsWindow = new TipsWindow();
+            tipsWindow.Show();
+            Application.Current.MainWindow.Close();
         }
     }
 }

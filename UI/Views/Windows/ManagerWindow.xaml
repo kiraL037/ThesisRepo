@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         Title="ManagerWindow" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="UsersDataGrid" DataContext="{Binding Username}" Style="{StaticResource DataGridStyle}" AutoGenerateColumns="True" Margin="0,115,0,0"/>
+        <DataGrid x:Name="UsersDataGrid" ItemsSource="{Binding Items}" AutoGenerateColumns="True" Margin="0,35,0,0"/>
+        <Button Content="Удалить пользователя" Command="{Binding DeleteUserCommand}" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button Content="Изменить права" Command="{Binding ChangePermissionsCommand}" Margin="150,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
     </Grid>
 </Window>

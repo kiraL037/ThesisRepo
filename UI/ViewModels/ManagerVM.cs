@@ -1,48 +1,65 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ThesisProjectARM.Core.Models;
+using ThesisProjectARM.Core.Interfaces;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
     public class ManagerVM : ViewModelBase
     {
-        private ObservableCollection<ManagerItem> _managerItems;
-        public ObservableCollection<ManagerItem> ManagerItems
+        private ObservableCollection<User> _items;
+        public ObservableCollection<User> Items
         {
-            get { return _managerItems; }
+            get { return _items; }
+            set { SetProperty(ref _items, value); }
+        }
+
+        private string _databaseName;
+        public string DatabaseName
+        {
+            get { return _databaseName; }
             set
             {
-                _managerItems = value;
-                OnPropertyChanged(nameof(ManagerItems));
-            }
-        }
-
-        private ICommand _loadItemsCommand;
-        public ICommand LoadItemsCommand
-        {
-            get
-            {
-                if (_loadItemsCommand == null)
+                if (SetProperty(ref _databaseName, value))
                 {
-                    _loadItemsCommand = new RelayCommand(async param => await LoadItemsAsync(), param => CanLoadItems());
+                    LoadDataAsync();
                 }
-                return _loadItemsCommand;
             }
         }
 
-        private bool CanLoadItems()
+        public ICommand DeleteUserCommand { get; }
+        public ICommand ChangePermissionsCommand { get; }
+
+        public ManagerVM()
         {
-            // Logic to enable or disable the command
-            return true;
+            Items = new ObservableCollection<User>();
+
+            DeleteUserCommand = new RelayCommand(DeleteUser, CanExecuteDeleteOrChange);
+            ChangePermissionsCommand = new RelayCommand(ChangePermissions, CanExecuteDeleteOrChange);
         }
 
-        private async Task LoadItemsAsync()
+        private string GetConnectionString()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["ThesisDB"].ConnectionString;
-            string query = "SELECT Name, Description FROM Users";
+            var connectionString = ConfigurationManager.ConnectionStrings["ThesisDB"].ConnectionString;
+            var builder = new SqlConnectionStringBuilder(connectionString)
+            {
+                InitialCatalog = _databaseName
+            };
+            return builder.ToString();
+        }
+
+        private async void LoadDataAsync()
+        {
+            if (string.IsNullOrEmpty(_databaseName))
+                return;
+
+            string connectionString = GetConnectionString();
+            string query = "SELECT Id, Username, IsAdmin FROM Users";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -50,29 +67,68 @@ namespace ThesisProjectARM.UI.ViewModels
                 await connection.OpenAsync();
                 SqlDataReader reader = await command.ExecuteReaderAsync();
 
-                var items = new ObservableCollection<DynamicDataModel>();
+                var items = new ObservableCollection<User>();
                 while (await reader.ReadAsync())
                 {
-                    var model = new DynamicDataModel();
-                    for (int i = 0; i < reader.FieldCount; i++)
+                    var user = new User
                     {
-                        model.Data[reader.GetName(i)] = reader.GetValue(i);
-                    }
-                    items.Add(model);
+                        Id = reader.GetInt32(0),
+                        Username = reader.GetString(1),
+                        IsAdmin = reader.GetBoolean(2)
+                    };
+                    items.Add(user);
                 }
-                ManagerItems = items;
+                Items = items;
             }
         }
 
-        public ManagerVM()
+        private bool CanExecuteDeleteOrChange(object parameter)
         {
-            ManagerItems = new ObservableCollection<DynamicDataModel>();
+            return parameter is User;
         }
-    }
 
-    public class ManagerItem
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        private async void DeleteUser(object parameter)
+        {
+            if (parameter is User user)
+            {
+                string connectionString = GetConnectionString();
+                string query = "DELETE FROM Users WHERE Id = @Id";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@Id", user.Id);
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+
+                Items.Remove(user);
+            }
+        }
+
+        private async void ChangePermissions(object parameter)
+        {
+            if (parameter is User user)
+            {
+                bool newRole = !user.IsAdmin;
+
+                string connectionString = GetConnectionString();
+                string query = "UPDATE Users SET IsAdmin = @IsAdmin WHERE Id = @Id";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@IsAdmin", newRole);
+                    command.Parameters.AddWithValue("@Id", user.Id);
+
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                }
+
+                user.IsAdmin = newRole;
+                OnPropertyChanged(nameof(Items));
+            }
+        }
     }
 }

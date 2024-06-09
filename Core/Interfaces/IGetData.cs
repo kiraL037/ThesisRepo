@@ -12,5 +12,6 @@ namespace Core.Interfaces
     {
         Task<InfoMetaData> GetMetaDataAsync();
         Task<DataTable> GetDataAsync();
+        Task SaveDataAsync(DataTable dataTable);
     }
 }

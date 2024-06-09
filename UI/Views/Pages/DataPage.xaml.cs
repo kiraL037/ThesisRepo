@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,10 @@ namespace ThesisProjectARM.UI.Views.Pages
         public DataPage()
         {
             InitializeComponent();
+        }
+        public void LoadData(DataTable dataTable)
+        {
+            dataGrid.ItemsSource = dataTable.DefaultView;
         }
     }
 }

@@ -1,13 +1,16 @@
 ﻿using Core.Interfaces;
+using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ThesisProjectARM.Core.Interfaces;
 using ThesisProjectARM.Core.Models;
+using CsvHelper;
 
 
 namespace ThesisProjectARM.Services.Services
@@ -72,6 +75,28 @@ namespace ThesisProjectARM.Services.Services
             }
 
             return dataTable;
+        }
+
+        public async Task SaveDataAsync(DataTable dataTable)
+        {
+            using (var writer = new StreamWriter(filePath))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                foreach (DataColumn column in dataTable.Columns)
+                {
+                    csv.WriteField(column.ColumnName);
+                }
+                csv.NextRecord();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    for (var i = 0; i < dataTable.Columns.Count; i++)
+                    {
+                        csv.WriteField(row[i]);
+                    }
+                    csv.NextRecord();
+                }
+            }
         }
     }
 }

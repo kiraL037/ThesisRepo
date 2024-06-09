@@ -77,7 +77,6 @@
     <Compile Include="ViewModels\AdminWindowVM.cs" />
     <Compile Include="ViewModels\AnalysisVM.cs" />
     <Compile Include="ViewModels\AuthenticationWindowVM.cs" />
-    <Compile Include="ViewModels\DataEntryVM.cs" />
     <Compile Include="ViewModels\DataExportVM.cs" />
     <Compile Include="ViewModels\DataPageVM.cs" />
     <Compile Include="ViewModels\DataVisualizationVM.cs" />
@@ -105,9 +104,6 @@
     </Compile>
     <Compile Include="Views\Windows\AuthenticationWindow.xaml.cs">
       <DependentUpon>AuthenticationWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Windows\DataEntry.xaml.cs">
-      <DependentUpon>DataEntry.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\FirstSetupWindow.xaml.cs">
       <DependentUpon>FirstSetupWindow.xaml</DependentUpon>
@@ -159,10 +155,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Windows\AuthenticationWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Windows\DataEntry.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

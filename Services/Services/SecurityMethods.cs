@@ -4,24 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BCrypt;
+using Core.Interfaces;
 
 namespace Services.Services
 {
-    public static class SecurityMethods
+    public class SecurityMethods : ISecurityMethods
     {
-        public static string HashPassword(string password, string salt)
+        public string HashPassword(string password, out string salt)
         {
-            return BCrypt.Net.BCrypt.HashPassword(password + salt);
+            salt = BCrypt.Net.BCrypt.GenerateSalt();
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
-        public static bool VerifyPassword(string password, string storedHash, string salt)
+        public bool VerifyPassword(string password, string hashedPassword)
         {
-            return BCrypt.Net.BCrypt.Verify(password + salt, storedHash);
-        }
-
-        public static string GenerateSalt()
-        {
-            return BCrypt.Net.BCrypt.GenerateSalt();
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
     }
 }

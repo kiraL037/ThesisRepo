@@ -23,7 +23,25 @@ namespace ThesisProjectARM.UI.Views.Windows
         public SelectTableDialog()
         {
             InitializeComponent();
-            this.DataContext = new SelectTableVM();
+            DataContext = new SelectTableVM();
+        }
+
+        private void OkButton_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+            Close();
+        }
+
+        private void WindowsAuthCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            ((SelectTableVM)DataContext).IsUserEnabled = false;
+            ((SelectTableVM)DataContext).IsPasswordEnabled = false;
+        }
+
+        private void WindowsAuthCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ((SelectTableVM)DataContext).IsUserEnabled = true;
+            ((SelectTableVM)DataContext).IsPasswordEnabled = true;
         }
     }
 }

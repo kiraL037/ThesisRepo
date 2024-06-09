@@ -8,16 +8,13 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DataPage">
 
-    <Grid>
-        <DataGrid ItemsSource="{Binding DataRows}" AutoGenerateColumns="True" Margin="0,0,0,63"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,392,0,0" Width="780">
-            <Button Content="Добавть" Click="AddData_Click" Margin="5" Padding="10"/>
-            <Button Content="Обновить" Click="UpdateData_Click" Margin="5" Padding="10"/>
-            <Button Content="Удалить" Click="DeleteData_Click" Margin="5" Padding="10"/>
-            <Button Content="График" Click="VisualizeData_Click" Margin="5" Padding="10"/>
+    <Grid HorizontalAlignment="Right" Width="800">
+        <StackPanel Orientation="Horizontal" Width="800" HorizontalAlignment="Center" Margin="0,0,0,416">
             <Button Content="Заполнить пустые места" Command="{Binding FillMissingValuesCommand}" />
             <Button Content="Убрать дупликаты" Command="{Binding RemoveDuplicatesCommand}" />
             <Button Content="Нормализовать данные" Command="{Binding NormalizeDataCommand}" />
+            <Button Content="Перейти к анализу" Command="{Binding NavigateToAnalysisPageCommand}" />
         </StackPanel>
+        <DataGrid x:Name="dataGrid"  ItemsSource="{Binding DataRows}" AutoGenerateColumns="True" Margin="0,39,0,0" Height="411" VerticalAlignment="Top" />
     </Grid>
 </Page>

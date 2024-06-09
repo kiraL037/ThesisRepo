@@ -5,28 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThesisProjectARM.UI.Views.Windows"
         mc:Ignorable="d"
-        Title="SelectTableDialog" Height="450" Width="800">
+        Title="SelectTableDialog" Height="0" Width="400">
     <Grid>
         <StackPanel Margin="10">
-            <TextBlock Text="Server:" Margin="0,0,0,5" Style="{StaticResource TextBlockStyle}"/>
+            <TextBlock Text="Server:" Margin="0,0,0,5"/>
             <TextBox Name="ServerTextbox" Text="{Binding Server}" Margin="0,0,0,10"/>
 
-            <TextBlock Text="Database:" Margin="0,0,0,5" Style="{StaticResource TextBlockStyle}"/>
+            <CheckBox Name="WindowsAuthCheckBox" Content="Use Windows Authentication" IsChecked="{Binding UseWindowsAuthentication}" Margin="0,0,0,10" Checked="WindowsAuthCheckBox_Checked" Unchecked="WindowsAuthCheckBox_Unchecked"/>
+
+            <TextBlock Text="Database:" Margin="0,0,0,5"/>
             <TextBox Name="DatabaseTextbox" Text="{Binding Database}" Margin="0,0,0,10"/>
 
-            <TextBlock Text="User:" Margin="0,0,0,5" Style="{StaticResource TextBlockStyle}"/>
-            <TextBox Name="UserTextbox" Text="{Binding User}" Margin="0,0,0,10" />
+            <TextBlock Text="User:" Margin="0,0,0,5"/>
+            <TextBox Name="UserTextbox" Text="{Binding User}" Margin="0,0,0,10" IsEnabled="{Binding IsUserEnabled}"/>
 
-            <TextBlock Text="Password:" Margin="0,0,0,5" Style="{StaticResource TextBlockStyle}"/>
-            <PasswordBox x:Name="Passwordbox" Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
+            <TextBlock Text="Password:" Margin="0,0,0,5"/>
+            <PasswordBox Name="PasswordBox" Margin="0,0,0,10" IsEnabled="{Binding IsPasswordEnabled}"/>
 
-            <TextBlock Text="Select Table:" Margin="0,0,0,10" Style="{StaticResource TextBlockStyle}"/>
-            <ComboBox Name="TablesComboBox" ItemsSource="{Binding Tables}" SelectedItem="{Binding SelectedTable, Mode=TwoWay}" Margin="0,0,0,10"/>
+            <Button Content="Connect" Command="{Binding ConnectCommand}" Margin="0,0,0,20"/>
 
-            <TextBlock Text="Select Primary Key Column:" Margin="0,0,0,10" Style="{StaticResource TextBlockStyle}"/>
-            <ComboBox Name="PrimaryKeyComboBox" ItemsSource="{Binding Columns}" SelectedItem="{Binding SelectedPKColumn, Mode=TwoWay}" Margin="0,0,0,10"/>
+            <TextBlock Text="Select Table:" Margin="0,0,0,5"/>
+            <ComboBox Name="TablesComboBox" ItemsSource="{Binding Tables}" SelectedItem="{Binding SelectedTable}" Margin="0,0,0,10"/>
 
-            <Button Content="Подключить" Style="{StaticResource BaseButtonStyle}" Command="{Binding ConnectCommand}"/>
+            <Button Content="Load Tables" Command="{Binding LoadTablesCommand}" Margin="0,0,0,10"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="OK" Width="75" Margin="5" IsDefault="True" Click="OkButton_Click"/>
+                <Button Content="Cancel" Width="75" Margin="5" IsCancel="True"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

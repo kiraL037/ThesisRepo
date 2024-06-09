@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ThesisProjectARM.Services.Services;
+using System.Windows.Navigation;
+using ThesisProjectARM.UI.Views.Pages;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
@@ -15,6 +17,7 @@ namespace ThesisProjectARM.UI.ViewModels
     {
         private ObservableCollection<DataRow> _dataRows;
         private DataTable _dataTable;
+        private MainUIVM _mainUIVM;
 
         public ObservableCollection<DataRow> DataRows
         {
@@ -27,10 +30,13 @@ namespace ThesisProjectARM.UI.ViewModels
         }
 
         public ICommand LoadDataCommand { get; }
+        public ICommand GoToAnalysisPageCommand { get; }
 
-        public DataPageVM()
+        public DataPageVM(MainUIVM mainUIVM)
         {
+            _mainUIVM = mainUIVM;
             LoadDataCommand = new RelayCommand(async param => await LoadDataAsync(param), param => CanLoadData(param));
+            GoToAnalysisPageCommand = new RelayCommand(param => NavigateToAnalysisPage());
         }
 
         private bool CanLoadData(object param)
@@ -45,7 +51,13 @@ namespace ThesisProjectARM.UI.ViewModels
                 var csvDataInfo = new CSVDatainfo(filePath);
                 _dataTable = await csvDataInfo.GetDataAsync();
                 DataRows = new ObservableCollection<DataRow>(_dataTable.AsEnumerable());
+                _mainUIVM.DataTable = _dataTable; 
             }
+        }
+
+        public void NavigateToAnalysisPage()
+        {
+            _mainUIVM.NavigateToAnalysisPage();
         }
     }
 }

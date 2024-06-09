@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThesisProjectARM.UI.Views.Windows"
         mc:Ignorable="d"
-        Title="FirstSetupWindow" Height="450" Width="800">
+        Title="FirstSetupWindow" Height="450" Width="400">
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="Сервер"/>
@@ -20,11 +20,11 @@
                 <ComboBoxItem Content="SQL Server Authentication"/>
             </ComboBox>
 
-            <TextBlock Text="Пользователь" Visibility="{Binding IsSqlAuthSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="10" Visibility="{Binding IsSqlAuthSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <TextBlock Text="Пользователь"/>
+            <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
 
-            <TextBlock Text="Пароль" Visibility="{Binding IsSqlAuthSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
-            <PasswordBox x:Name="PasswordBox" Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="10" Visibility="{Binding IsSqlAuthSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <TextBlock Text="Пароль" />
+            <PasswordBox x:Name="PasswordBos" Margin="10" PasswordChanged="PasswordBox_PasswordChanged"/>
 
             <Button Content="Подключить" Command="{Binding SetupCommand}" Margin="10" />
         </StackPanel>

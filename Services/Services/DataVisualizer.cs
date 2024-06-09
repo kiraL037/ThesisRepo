@@ -14,7 +14,7 @@ namespace ThesisProjectARM.Services.Services
 {
     public class DataVisualizer : IDataVisualizer
     {
-        public void PlotData(DataTable data, string columnName)
+        public PlotModel PlotData(DataTable data, string columnName)
         {
             var plotModel = new PlotModel { Title = "Data Plot" };
 
@@ -26,15 +26,7 @@ namespace ThesisProjectARM.Services.Services
 
             plotModel.Series.Add(series);
 
-            var plotView = new PlotView { Model = plotModel };
-            var window = new Window
-            {
-                Content = plotView,
-                Width = 800,
-                Height = 600,
-                Title = "Data Visualization"
-            };
-            window.ShowDialog();
+            return plotModel;
         }
     }
 }

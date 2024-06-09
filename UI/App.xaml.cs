@@ -4,18 +4,15 @@ using System.Threading.Tasks;
 using System.Windows;
 using SimpleInjector;
 using NLog;
-using System.ComponentModel;
 using ThesisProjectARM.Core.Interfaces;
 using ThesisProjectARM.UI.ViewModels;
 using ThesisProjectARM.UI.Views.Windows;
 using ThesisProjectARM.Services.Services;
-using ThesisProjectARM.Data;
 using UI.Properties;
-using System.Configuration;
 using ThesisProjectARM.Data.Repositories;
-using System.Xml.Linq;
-using UI;
 using ThesisProjectARM.Core.Models;
+using Core.Interfaces;
+using Services.Services;
 
 namespace UI
 {
@@ -24,7 +21,6 @@ namespace UI
     /// </summary>
     public partial class App : Application
     {
-
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public static SimpleInjector.Container _container;
 
@@ -36,10 +32,18 @@ namespace UI
 
         private void ConfigureContainer()
         {
-            _container.Register<IUserRepository, UserRepository>(Lifestyle.Singleton);
+            // Регистрация ISecurityMethods
+            _container.Register<ISecurityMethods, SecurityMethods>(Lifestyle.Singleton);
+
+            // Остальные регистрации
+            _container.Register<IUserRepository>(() =>
+            {
+                string connectionString = Settings.Default.ConnectionString;
+                return new UserRepository(connectionString);
+            }, Lifestyle.Singleton);
+
             _container.Register<IUserService, UserService>(Lifestyle.Singleton);
             _container.Register<IDatabaseService, DBService>(Lifestyle.Singleton);
-            _container.Register<IWindowService, WindowService>(Lifestyle.Singleton);
             _container.Register<ManagerVM>(Lifestyle.Singleton);
             _container.Register<RegistrationVM>(Lifestyle.Singleton);
             _container.Register<AuthenticationWindowVM>(Lifestyle.Singleton);
@@ -67,6 +71,8 @@ namespace UI
 
         private void RegisterWindows()
         {
+
+            _container.Register<WelcomeWindow>(Lifestyle.Transient);
             _container.Register<MainUIWindow>(Lifestyle.Transient);
             _container.Register<MainWindow>(Lifestyle.Transient);
             _container.Register<TipsWindow>(Lifestyle.Transient);
@@ -74,7 +80,6 @@ namespace UI
             _container.Register<RegistrationWindow>(Lifestyle.Transient);
             _container.Register<FirstSetupWindow>(Lifestyle.Transient);
             _container.Register<ManagerWindow>(Lifestyle.Transient);
-            _container.Register<DataEntry>(Lifestyle.Transient);
         }
 
         private void OpenFirstSetupWindow()

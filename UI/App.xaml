@@ -10,7 +10,6 @@
         <Color x:Key="PrimaryDarkColor">#F26430</Color>
         <Color x:Key="SecondaryColor">#EE964B</Color>
         <Color x:Key="BackgroundColor">#F95738</Color>
-        <Color x:Key="ForegroundColor">#F95738</Color>
         <Color x:Key="AccentColor">#34113F</Color>
 
         <!-- Кисти -->
@@ -19,7 +18,7 @@
         <SolidColorBrush x:Key="PrimaryDarkColorBrush" Color="{StaticResource PrimaryDarkColor}"/>
         <SolidColorBrush x:Key="SecondaryColorBrush" Color="{StaticResource SecondaryColor}"/>
         <SolidColorBrush x:Key="BackgroundColorBrush" Color="{StaticResource BackgroundColor}"/>
-        <SolidColorBrush x:Key="ForegroundColorBrush" Color="{StaticResource ForegroundColor}"/>
+        <SolidColorBrush x:Key="ForegroundColorBrush" Color="{StaticResource BackgroundColor}"/>
         <SolidColorBrush x:Key="AccentColorBrush" Color="{StaticResource AccentColor}"/>
 
         <!-- Общие стили -->
@@ -29,10 +28,10 @@
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}"/>
             <Setter Property="Effect">
                 <Setter.Value>
-                    <DropShadowEffect Color="{StaticResource ForegroundColor}" ShadowDepth="2" BlurRadius="5"/>
+                    <DropShadowEffect Color="{StaticResource BackgroundColor}" ShadowDepth="2" BlurRadius="5"/>
                 </Setter.Value>
             </Setter>
             <Setter Property="Template">
@@ -50,11 +49,11 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{StaticResource PrimaryLightColorBrush}"/>
-                    <Setter Property="Foreground"  Value="{StaticResource ForegroundColor}"/>
+                    <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="{StaticResource PrimaryDarkColorBrush}"/>
-                    <Setter Property="Foreground" Value="{StaticResource ForegroundColor}"/>
+                    <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}"/>
                     <Setter Property="Effect">
                         <Setter.Value>
                             <DropShadowEffect Color="DarkSlateGray" ShadowDepth="2" BlurRadius="5"/>
@@ -81,7 +80,7 @@
             <Setter Property="RowBackground" Value="White"/>
             <Setter Property="AlternatingRowBackground" Value="#F2F2F2"/>
         </Style>
-        
+
         <Style x:Key="TextBoxStyle" TargetType="TextBox">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="10,5"/>
@@ -112,6 +111,6 @@
             <Setter Property="Margin" Value="0,5"/>
             <Setter Property="FontSize" Value="20"/>
         </Style>
-        
+
     </Application.Resources>
 </Application>

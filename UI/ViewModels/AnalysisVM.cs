@@ -16,31 +16,35 @@ namespace ThesisProjectARM.UI.ViewModels
 {
     public class AnalysisVM : ViewModelBase
     {
-        private readonly IClassificationClustering classificationClusteringService;
-        private readonly IRegressionAnalysis regressionAnalysisService;
-        private readonly StatisticalAnalysis statisticalAnalysisService;
-        private readonly TimeSeriesAnalysis timeSeriesAnalysisService;
-        private DataTable _selectedData;
+        private readonly IClassificationClustering _classificationClusteringService;
+        private readonly IRegressionAnalysis _regressionAnalysisService;
+        private readonly StatisticalAnalysis _statisticalAnalysisService;
+        private readonly TimeSeriesAnalysis _timeSeriesAnalysisService;
+        private DataTable _dataTable;
         private ObservableCollection<string> _selectedColumns;
+        private string _analysisResult;
 
-        public AnalysisVM()
+        public AnalysisVM(DataTable dataTable)
         {
-            classificationClusteringService = new ClassificationClustering();
-            regressionAnalysisService = new RegressionAnalysis();
-            statisticalAnalysisService = new StatisticalAnalysis();
-            timeSeriesAnalysisService = new TimeSeriesAnalysis();
+            _classificationClusteringService = new ClassificationClustering();
+            _regressionAnalysisService = new RegressionAnalysis();
+            _statisticalAnalysisService = new StatisticalAnalysis();
+            _timeSeriesAnalysisService = new TimeSeriesAnalysis();
+            _dataTable = dataTable;
+            AvailableColumns = new ObservableCollection<string>(_dataTable.Columns.Cast<DataColumn>().Select(col => col.ColumnName));
             _selectedColumns = new ObservableCollection<string>();
+
+            PerformKMeansClusteringCommand = new RelayCommand(async (param) => await PerformKMeansClusteringAsync(3), CanExecuteAnalysis);
+            PerformRegressionAnalysisCommand = new RelayCommand(async (param) => await PerformRegressionAnalysisAsync("DependentVariable", new float[] { 1.0f, 2.0f }), CanExecuteAnalysis);
+            CalculateCorrelationCommand = new RelayCommand(async (param) => await CalculateCorrelationAsync("Column1", "Column2"), CanExecuteAnalysis);
+            CalculateMeanCommand = new RelayCommand(async (param) => await CalculateMeanAsync("ColumnName"), CanExecuteAnalysis);
+            CalculateMedianCommand = new RelayCommand(async (param) => await CalculateMedianAsync("ColumnName"), CanExecuteAnalysis);
+            CalculateStandardDeviationCommand = new RelayCommand(async (param) => await CalculateStandardDeviationAsync("ColumnName"), CanExecuteAnalysis);
+            ForecastTimeSeriesCommand = new RelayCommand(async (param) => await ForecastTimeSeriesAsync("ColumnName", 12), CanExecuteAnalysis);
+            DetectSeasonalPatternsCommand = new RelayCommand(async (param) => await DetectSeasonalPatternsAsync("ColumnName"), CanExecuteAnalysis);
         }
 
-        public DataTable SelectedData
-        {
-            get => _selectedData;
-            set
-            {
-                _selectedData = value;
-                OnPropertyChanged(nameof(SelectedData));
-            }
-        }
+        public ObservableCollection<string> AvailableColumns { get; }
 
         public ObservableCollection<string> SelectedColumns
         {
@@ -52,44 +56,76 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
-        public async Task PerformKMeansClusteringAsync(string[] columnNames, int clusterCount)
+        public string AnalysisResult
         {
-            var clusters = await classificationClusteringService.KMeansClusteringAsync(SelectedData, columnNames, clusterCount);
+            get => _analysisResult;
+            set
+            {
+                _analysisResult = value;
+                OnPropertyChanged(nameof(AnalysisResult));
+            }
         }
 
-        public async Task PerformRegressionAnalysisAsync(string dependentVariable, string[] independentVariables, float[] newValues)
+        public ICommand PerformKMeansClusteringCommand { get; }
+        public ICommand PerformRegressionAnalysisCommand { get; }
+        public ICommand CalculateCorrelationCommand { get; }
+        public ICommand CalculateMeanCommand { get; }
+        public ICommand CalculateMedianCommand { get; }
+        public ICommand CalculateStandardDeviationCommand { get; }
+        public ICommand ForecastTimeSeriesCommand { get; }
+        public ICommand DetectSeasonalPatternsCommand { get; }
+
+        private bool CanExecuteAnalysis(object parameter)
         {
-            var prediction = await regressionAnalysisService.PredictAsync(SelectedData, dependentVariable, independentVariables, newValues);
+            return SelectedColumns != null && SelectedColumns.Any();
         }
 
-        public async Task<double> CalculateCorrelationAsync(string column1, string column2)
+        private async Task PerformKMeansClusteringAsync(int clusterCount)
         {
-            return await Task.Run(() => CorrelationAnalysis.CalculateCorrelation(SelectedData, column1, column2));
+            var clusters = await _classificationClusteringService.KMeansClusteringAsync(_dataTable, _selectedColumns.ToArray(), clusterCount);
+            AnalysisResult = string.Join(", ", clusters);
         }
 
-        public async Task<double> CalculateMeanAsync(string columnName)
+        private async Task PerformRegressionAnalysisAsync(string dependentVariable, float[] newValues)
         {
-            return await Task.Run(() => statisticalAnalysisService.CalculateMean(SelectedData, columnName));
+            var prediction = await _regressionAnalysisService.PredictAsync(_dataTable, dependentVariable, _selectedColumns.ToArray(), newValues);
+            AnalysisResult = $"Prediction: {prediction}";
         }
 
-        public async Task<double> CalculateMedianAsync(string columnName)
+        private async Task CalculateCorrelationAsync(string column1, string column2)
         {
-            return await Task.Run(() => statisticalAnalysisService.CalculateMedian(SelectedData, columnName));
+            var correlation = await Task.Run(() => CorrelationAnalysis.CalculateCorrelation(_dataTable, column1, column2));
+            AnalysisResult = $"Correlation: {correlation}";
         }
 
-        public async Task<double> CalculateStandardDeviationAsync(string columnName)
+        private async Task CalculateMeanAsync(string columnName)
         {
-            return await Task.Run(() => statisticalAnalysisService.CalculateStandardDeviation(SelectedData, columnName));
+            var mean = await Task.Run(() => _statisticalAnalysisService.CalculateMean(_dataTable, columnName));
+            AnalysisResult = $"Mean: {mean}";
         }
 
-        public async Task<double[]> ForecastTimeSeriesAsync(string columnName, int periods)
+        private async Task CalculateMedianAsync(string columnName)
         {
-            return await Task.Run(() => timeSeriesAnalysisService.Forecast(SelectedData, columnName, periods));
+            var median = await Task.Run(() => _statisticalAnalysisService.CalculateMedian(_dataTable, columnName));
+            AnalysisResult = $"Median: {median}";
         }
 
-        public async Task<(double[] seasonal, double[] trend)> DetectSeasonalPatternsAsync(string columnName)
+        private async Task CalculateStandardDeviationAsync(string columnName)
         {
-            return await Task.Run(() => timeSeriesAnalysisService.SeasonalCyclicPatterns(SelectedData, columnName));
+            var stdDev = await Task.Run(() => _statisticalAnalysisService.CalculateStandardDeviation(_dataTable, columnName));
+            AnalysisResult = $"Standard Deviation: {stdDev}";
+        }
+
+        private async Task ForecastTimeSeriesAsync(string columnName, int periods)
+        {
+            var forecast = await _timeSeriesAnalysisService.Forecast(_dataTable, columnName, periods);
+            AnalysisResult = $"Forecast: {string.Join(", ", forecast)}";
+        }
+
+        private async Task DetectSeasonalPatternsAsync(string columnName)
+        {
+            var patterns = await _timeSeriesAnalysisService.SeasonalCyclicPatterns(_dataTable, columnName);
+            AnalysisResult = $"Seasonal Patterns: {string.Join(", ", patterns)}";
         }
     }
 }

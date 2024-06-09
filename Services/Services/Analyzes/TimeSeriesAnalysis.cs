@@ -10,7 +10,7 @@ namespace ThesisProjectARM.Services.Services.Analyzes
 {
     public class TimeSeriesAnalysis : ITimeSeriesAnalysis
     {
-        public double[] Forecast(DataTable data, string columnName, int periods)
+        public async Task<double[]> Forecast(DataTable data, string columnName, int periods)
         {
             // Пример простой реализации на основе скользящего среднего
             var columnData = data.AsEnumerable().Select(row => Convert.ToDouble(row[columnName])).ToArray();
@@ -21,10 +21,10 @@ namespace ThesisProjectARM.Services.Services.Analyzes
             {
                 forecast[i] = mean;
             }
-            return forecast;
+            return await Task.FromResult(forecast);
         }
 
-        public (double[] seasonal, double[] trend) SeasonalCyclicPatterns(DataTable data, string columnName)
+        public async Task<(double[] seasonal, double[] trend)> SeasonalCyclicPatterns(DataTable data, string columnName)
         {
             // Пример простой реализации для обнаружения сезонных циклов
             var columnData = data.AsEnumerable().Select(row => Convert.ToDouble(row[columnName])).ToArray();
@@ -37,8 +37,7 @@ namespace ThesisProjectARM.Services.Services.Analyzes
                 seasonal[i] = columnData[i] % 2 == 0 ? 1 : -1;
                 trend[i] = columnData[i];
             }
-
-            return (seasonal, trend);
+            return await Task.FromResult((seasonal, trend));
         }
     }
 }

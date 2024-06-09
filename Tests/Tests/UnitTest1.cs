@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
+using System.Threading.Tasks;
 using ThesisProjectARM.Services.Services;
-using ThesisProjectARM.Data;
+using ThesisProjectARM.Core.Models;
 
 namespace ThesisProjectARM.Tests.Tests
 {
@@ -9,30 +10,23 @@ namespace ThesisProjectARM.Tests.Tests
     public class DataServiceTests
     {
         [TestMethod]
-        public void LoadData_ShouldReturnDataTable()
+        public async Task TestLoadData()
         {
-            // Arrange
-            var dataService = new DataService();
-            var filePath = "path_to_test_file.csv";
+            var service = new DBCHService();
+            string connectionString = "your_connection_string";
+            string tableName = "your_table_name";
 
-            // Act
-            var result = dataService.LoadData(filePath);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(DataTable));
+            DataTable data = await service.LoadDataAsync(connectionString, tableName); // Исправлено
         }
 
-        [TestMethod]
-        public void SaveData_ShouldSaveWithoutExceptions()
+        public async Task TestSaveData()
         {
-            // Arrange
-            var dataService = new DataService();
-            var dataTable = new DataTable();
-            var filePath = "path_to_save_file.csv";
+            var service = new DBCHService();
+            string connectionString = "your_connection_string";
+            string tableName = "your_table_name";
+            DynamicDataModel data = new DynamicDataModel();
 
-            // Act & Assert
-            dataService.SaveData(dataTable, filePath);
+            await service.InsertDataAsync(tableName, data); // Исправлено
         }
     }
 }

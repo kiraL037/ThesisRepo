@@ -53,8 +53,14 @@
     <Reference Include="BCrypt.Net-Next, Version=4.0.3.0, Culture=neutral, PublicKeyToken=1e11be04b6288443, processorArchitecture=MSIL">
       <HintPath>..\packages\BCrypt.Net-Next.4.0.3\lib\net48\BCrypt.Net-Next.dll</HintPath>
     </Reference>
+    <Reference Include="CsvHelper, Version=32.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.32.0.3\lib\net48\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.Numerics, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.Numerics.8.0.0\lib\net462\Microsoft.Bcl.Numerics.dll</HintPath>
@@ -181,13 +187,11 @@
     <Compile Include="Services\CSVDatainfo.cs" />
     <Compile Include="Services\DataAnalyzer.cs" />
     <Compile Include="Services\DataCacheService.cs" />
-    <Compile Include="Services\DataEntryService.cs" />
     <Compile Include="Services\DataExporter.cs" />
     <Compile Include="Services\DataFilter.cs" />
-    <Compile Include="Services\DataManager.cs" />
     <Compile Include="Services\DataNormalizer.cs" />
     <Compile Include="Services\DataPrediction.cs" />
-    <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\DBCHService.cs" />
     <Compile Include="Services\DataVisualizer.cs" />
     <Compile Include="Services\DBDataInfo.cs" />
     <Compile Include="Services\DBService.cs" />
@@ -195,7 +199,6 @@
     <Compile Include="Services\RemoveDuplicates.cs" />
     <Compile Include="Services\SecurityMethods.cs" />
     <Compile Include="Services\UserServices.cs" />
-    <Compile Include="Services\WindowService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

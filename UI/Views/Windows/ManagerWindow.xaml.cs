@@ -11,7 +11,7 @@ namespace ThesisProjectARM.UI.Views.Windows
         public ManagerWindow()
         {
             InitializeComponent();
-            this.DataContext = new ManagerVM();
+            DataContext = new ManagerVM();
         }
     }
 }

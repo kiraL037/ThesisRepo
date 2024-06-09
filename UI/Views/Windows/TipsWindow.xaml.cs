@@ -23,7 +23,7 @@ namespace ThesisProjectARM.UI.Views.Windows
         public TipsWindow()
         {
             InitializeComponent();
-            this.DataContext = new TipsWindowVM();
+            DataContext = new TipsWindowVM();
         }
     }
 }

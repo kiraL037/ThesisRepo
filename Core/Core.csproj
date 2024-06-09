@@ -31,8 +31,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OxyPlot, Version=2.1.2.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.2.1.2\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=2.1.2.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.2.1.2\lib\net45\OxyPlot.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf.Shared, Version=2.1.2.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.Shared.2.1.2\lib\net45\OxyPlot.Wpf.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,23 +61,26 @@
     <Compile Include="Interfaces\IDataFilter.cs" />
     <Compile Include="Interfaces\IDataInfo.cs" />
     <Compile Include="Interfaces\IDataNormalizer.cs" />
-    <Compile Include="Interfaces\IDataService.cs" />
+    <Compile Include="Interfaces\IDBCHService.cs" />
     <Compile Include="Interfaces\IDataVisualizer.cs" />
     <Compile Include="Interfaces\IFillMissingValues.cs" />
     <Compile Include="Interfaces\IGetData.cs" />
     <Compile Include="Interfaces\IRegressionAnalysis.cs" />
     <Compile Include="Interfaces\IRemoveDuplicates.cs" />
+    <Compile Include="Interfaces\ISecurityMethods.cs" />
     <Compile Include="Interfaces\IStatisticalAnalysis.cs" />
     <Compile Include="Interfaces\ITimeSeriesAnalysis.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
-    <Compile Include="Interfaces\IWindowService.cs" />
     <Compile Include="Models\ColumnMetadata.cs" />
     <Compile Include="Models\ConnectionModel.cs" />
     <Compile Include="Models\DynamicDataModel.cs" />
     <Compile Include="Models\InfoMetadata.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

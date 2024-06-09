@@ -6,57 +6,107 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using ThesisProjectARM.Core.Interfaces;
+using ThesisProjectARM.Core.Models;
+using ThesisProjectARM.Services.Services;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
     public class SelectTableVM : ViewModelBase
     {
+        private readonly IDBCHService _dbCHService;
+
+        public string Server { get; set; }
+        public string Database { get; set; }
+        public string User { get; set; }
+        public string Password { get; set; }
+        public bool UseWindowsAuthentication { get; set; }
+
+        private bool _isUserEnabled;
+        public bool IsUserEnabled
+        {
+            get => _isUserEnabled;
+            set { _isUserEnabled = value; OnPropertyChanged(); }
+        }
+
+        private bool _isPasswordEnabled;
+        public bool IsPasswordEnabled
+        {
+            get => _isPasswordEnabled;
+            set { _isPasswordEnabled = value; OnPropertyChanged(); }
+        }
+
         private ObservableCollection<string> _tables;
         public ObservableCollection<string> Tables
         {
-            get { return _tables; }
-            set { _tables = value; OnPropertyChanged(nameof(Tables)); }
+            get => _tables;
+            set { _tables = value; OnPropertyChanged(); }
         }
 
         private string _selectedTable;
         public string SelectedTable
         {
-            get { return _selectedTable; }
-            set { _selectedTable = value; OnPropertyChanged(nameof(SelectedTable)); }
+            get => _selectedTable;
+            set { _selectedTable = value; OnPropertyChanged(); }
         }
 
-        private ICommand _selectTableCommand;
-        public ICommand SelectTableCommand
-        {
-            get
-            {
-                if (_selectTableCommand == null)
-                {
-                    _selectTableCommand = new RelayCommand(param => SelectTable(), param => CanSelectTable());
-                }
-                return _selectTableCommand;
-            }
-        }
-
-        private bool CanSelectTable()
-        {
-            return !string.IsNullOrEmpty(SelectedTable);
-        }
-
-        private void SelectTable()
-        {
-            // Logic to select table
-            MessageBox.Show($"Table {SelectedTable} selected.");
-        }
+        public ICommand ConnectCommand { get; }
+        public ICommand LoadTablesCommand { get; }
 
         public SelectTableVM()
         {
-            Tables = new ObservableCollection<string>
+            _dbCHService = new DBCHService();
+            IsUserEnabled = true;
+            IsPasswordEnabled = true;
+
+            ConnectCommand = new RelayCommand(async (param) => await ConnectToDatabase());
+            LoadTablesCommand = new RelayCommand(async (param) => await LoadTables());
+        }
+
+        private async Task ConnectToDatabase()
         {
-            "Table1",
-            "Table2",
-            "Table3"
-        };
+            var connectionModel = new ConnectionModel
+            {
+                Server = Server,
+                Database = Database,
+                Username = User,
+                Password = Password,
+                UseWindowsAuthentication = UseWindowsAuthentication
+            };
+
+            string connectionString = _dbCHService.BuildConnectionString(connectionModel);
+            bool isConnected = await _dbCHService.TestConnectionAsync(connectionString);
+
+            if (isConnected)
+            {
+                MessageBox.Show("Successfully connected to the database.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                await LoadTables();
+            }
+            else
+            {
+                MessageBox.Show("Failed to connect to the database.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task LoadTables()
+        {
+            try
+            {
+                string connectionString = _dbCHService.BuildConnectionString(new ConnectionModel
+                {
+                    Server = Server,
+                    Database = Database,
+                    Username = User,
+                    Password = Password,
+                    UseWindowsAuthentication = UseWindowsAuthentication
+                });
+
+                Tables = new ObservableCollection<string>(await _dbCHService.GetTablesAsync(connectionString));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading tables: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

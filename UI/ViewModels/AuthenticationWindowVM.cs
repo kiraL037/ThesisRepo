@@ -3,12 +3,11 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.Core.Models;
-using System.Data;
 using ThesisProjectARM.UI.Views.Windows;
 using System.Windows;
-using ThesisProjectARM.Services.Services;
 using System.Linq;
+using System.Security;
+using System;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
@@ -16,7 +15,7 @@ namespace ThesisProjectARM.UI.ViewModels
     {
         private readonly IUserService _userService;
         private string _username;
-        private string _password;
+        private SecureString _password;
 
         public AuthenticationWindowVM(IUserService userService)
         {
@@ -25,7 +24,7 @@ namespace ThesisProjectARM.UI.ViewModels
 
         public string Username
         {
-            get => _username;
+            get { return _username; }
             set
             {
                 _username = value;
@@ -33,9 +32,9 @@ namespace ThesisProjectARM.UI.ViewModels
             }
         }
 
-        public string Password
+        public SecureString Password
         {
-            get => _password;
+            get { return _password; }
             set
             {
                 _password = value;
@@ -45,26 +44,50 @@ namespace ThesisProjectARM.UI.ViewModels
 
         public ICommand LoginCommand => new RelayCommand(async _ => await Login());
 
-        private async Task Login()
-        {
-            var result = await _userService.AuthenticateUserAsync(Username, Password);
-
-            if (result)
-            {
-                MessageBox.Show("User authenticated successfully.");
-                CloseWindow();
-            }
-            else
-            {
-                MessageBox.Show("Failed to authenticate user.");
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private async Task Login()
+        {
+            var result = await _userService.AuthenticateUserAsync(Username, ConvertToUnsecureString(Password));
+
+            if (result)
+            {
+                MessageBox.Show("Login successful.");
+                OpenMainUIWindow();
+            }
+            else
+            {
+                MessageBox.Show("Invalid username or password.");
+            }
+        }
+
+        private string ConvertToUnsecureString(SecureString securePassword)
+        {
+            if (securePassword == null)
+                throw new ArgumentNullException(nameof(securePassword));
+
+            var unmanagedString = IntPtr.Zero;
+            try
+            {
+                unmanagedString = System.Runtime.InteropServices.Marshal.SecureStringToGlobalAllocUnicode(securePassword);
+                return System.Runtime.InteropServices.Marshal.PtrToStringUni(unmanagedString);
+            }
+            finally
+            {
+                System.Runtime.InteropServices.Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+            }
+        }
+
+        private void OpenMainUIWindow()
+        {
+            var mainWindow = new MainUIWindow();
+            mainWindow.Show();
+            CloseWindow();
         }
 
         private void CloseWindow()

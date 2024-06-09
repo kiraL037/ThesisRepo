@@ -13,5 +13,6 @@ namespace ThesisProjectARM.Core.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public string ConnectionString { get; set; }
+        public bool UseWindowsAuthentication { get; set; }
     }
 }

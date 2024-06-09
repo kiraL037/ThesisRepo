@@ -1,26 +1,61 @@
 ﻿using Core.Interfaces;
+using OxyPlot;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using ThesisProjectARM.Core.Interfaces;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
-    public class DataVisualizationVM
+    public class DataVisualizationVM : ViewModelBase
     {
-        private readonly IDataVisualizer dataVisualizerService;
+        private readonly IDataVisualizer _dataVisualizerService;
+        private DataTable _dataTable;
+        private string _selectedColumnName;
+        private PlotModel _plotModel;
 
-        public DataVisualizationVM(IDataVisualizer dataVisualizerService)
+        public ObservableCollection<string> ColumnNames { get; set; }
+        public string SelectedColumnName
         {
-            this.dataVisualizerService = dataVisualizerService;
+            get => _selectedColumnName;
+            set
+            {
+                _selectedColumnName = value;
+                OnPropertyChanged();
+            }
         }
 
-        public void VisualizeData(DataTable data, string columnName)
+        public PlotModel PlotModel
         {
-            dataVisualizerService.PlotData(data, columnName);
+            get => _plotModel;
+            set
+            {
+                _plotModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand VisualizeCommand { get; }
+
+        public DataVisualizationVM(IDataVisualizer dataVisualizerService, DataTable dataTable)
+        {
+            _dataVisualizerService = dataVisualizerService;
+            _dataTable = dataTable;
+            ColumnNames = new ObservableCollection<string>(dataTable.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
+            VisualizeCommand = new RelayCommand(async (param) => await VisualizeData());
+        }
+
+        public async Task VisualizeData()
+        {
+            if (!string.IsNullOrEmpty(_selectedColumnName))
+            {
+                PlotModel = _dataVisualizerService.PlotData(_dataTable, _selectedColumnName);
+            }
         }
     }
 }

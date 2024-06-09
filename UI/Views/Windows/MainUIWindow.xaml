@@ -23,6 +23,7 @@
                     <Button Content="Загрузить файл" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
                     <Button Content="Сохранить данные" Command="{Binding SaveDataCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
                     <Button Content="Подключить базу данных" Command="{Binding ConnectToDBCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
+                    <Button Content="Анализ" Command="{Binding AnalysisCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
                 </ToolBar>
             </ToolBarTray>
             <StackPanel Background="LightGreen" Height="356">
@@ -31,8 +32,8 @@
                 <Button Content="Удалить" Command="{Binding DeleteDataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
                 <Button Content="Данные" Command="{Binding DataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
             </StackPanel>
-            <Frame x:Name="MainFrame" />
-            <DataGrid ItemsSource="{Binding DataCollection}" Style="{StaticResource DataGridStyle}" AutoGenerateColumns="True" Margin="10"/>
+            <Frame x:Name="MainFrame"/>
+            <DataGrid ItemsSource="{Binding DataTable}" Style="{StaticResource DataGridStyle}" AutoGenerateColumns="True" Margin="10"/>
         </DockPanel>
     </Grid>
 </Window>

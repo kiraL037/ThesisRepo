@@ -1,63 +1,111 @@
 ﻿using Core.Interfaces;
+using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using ThesisProjectARM.Core.Interfaces;
 using ThesisProjectARM.Core.Models;
+using ThesisProjectARM.Services.Services;
 using ThesisProjectARM.UI.Views.Pages;
 using ThesisProjectARM.UI.Views.Windows;
-using UI;
+using UI.ViewModels;
 
 namespace ThesisProjectARM.UI.ViewModels
 {
-    public class MainUIVM
+    public class MainUIVM : ViewModelBase 
     {
-        private readonly IDataInfo _dataService;
+        private IGetData _csvDataInfo;
+        private IDBCHService _dbCHService;
+        private DataTable _dataTable;
+        private Frame _mainFrame;
+        private DBCRUDVM _dbCrudVm;
+        private string _selectedTableName;
+        private string _connectionString;
+
+        public DataTable DataTable
+        {
+            get => _dataTable;
+            set
+            {
+                _dataTable = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<DynamicDataModel> DataCollection { get; set; }
 
         public ICommand LoadDataCommand { get; }
         public ICommand SaveChangesCommand { get; }
         public ICommand ConnectToDBCommand { get; }
-        public ICommand ReportCommand { get; }
+        public ICommand AnalysisCommand { get; }
         public ICommand DataCommand { get; }
         public ICommand AboutCommand { get; }
         public ICommand ExitCommand { get; }
+        public ICommand OpenFileCommand { get; }
+        public ICommand AddDataCommand { get; }
+        public ICommand EditDataCommand { get; }
+        public ICommand DeleteDataCommand { get; }
 
-        public MainUIVM(IDataInfo dataService)
+        public MainUIVM()
         {
-            _dataService = dataService;
             DataCollection = new ObservableCollection<DynamicDataModel>();
+            _dbCHService = new DBCHService();
 
-            LoadDataCommand = new RelayCommand(async (param) => await LoadData());
+            LoadDataCommand = new RelayCommand(async (param) => await LoadDataFromCsv());
             SaveChangesCommand = new RelayCommand(async (param) => await SaveChanges());
             ConnectToDBCommand = new RelayCommand(async (param) => await ConnectToDB());
-            ReportCommand = new RelayCommand((param) => OpenReport());
-            DataCommand = new RelayCommand((param) => OpenData());
+            AnalysisCommand = new RelayCommand((param) => NavigateToAnalysisPage());
+            DataCommand = new RelayCommand((param) => NavigateToDataPage());
             AboutCommand = new RelayCommand((param) => ShowAbout());
             ExitCommand = new RelayCommand((param) => ExitApplication());
+            OpenFileCommand = new RelayCommand((param) => OpenFile());
+            AddDataCommand = new RelayCommand(async (param) => await AddData());
+            EditDataCommand = new RelayCommand(async (param) => await EditData());
+            DeleteDataCommand = new RelayCommand(async (param) => await DeleteData());
+
+            NavigateToDataPage();
         }
 
-        private async Task LoadData()
+        private void OpenFile()
         {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = openFileDialog.FileName;
+                _csvDataInfo = new CSVDatainfo(filePath);
+            }
+        }
+
+        private async Task LoadDataFromCsv()
+        {
+            if (_csvDataInfo == null)
+            {
+                MessageBox.Show("Please select a file first.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
-                var data = await _dataService.LoadDataAsync("YourTableName"); // Replace with your table name
-                DataCollection.Clear();
-                foreach (var item in data)
-                {
-                    DataCollection.Add(item);
-                }
+                DataTable = await _csvDataInfo.GetDataAsync();
+                var dataPage = new DataPage();
+                dataPage.LoadData(DataTable);
+                NavigateToPage(dataPage);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error loading data from CSV: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -65,9 +113,17 @@ namespace ThesisProjectARM.UI.ViewModels
         {
             try
             {
-                foreach (var item in DataCollection)
+                if (_csvDataInfo != null)
                 {
-                    await _dataService.InsertDataAsync("YourTableName", item); // Replace with your table name
+                    // Save changes to CSV file
+                    await _csvDataInfo.SaveDataAsync(DataTable);
+                }
+                else if (_dbCrudVm != null)
+                {
+                    foreach (var item in DataCollection)
+                    {
+                        await _dbCrudVm.InsertData(_selectedTableName, item);
+                    }
                 }
                 MessageBox.Show("Data saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -79,27 +135,50 @@ namespace ThesisProjectARM.UI.ViewModels
 
         private async Task ConnectToDB()
         {
-            try
+            var dialog = new SelectTableDialog();
+            if (dialog.ShowDialog() == true)
             {
-                // Implement database connection logic if needed
-                MessageBox.Show("Successfully connected to the database.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error connecting to the database: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var vm = dialog.DataContext as SelectTableVM;
+                var connectionModel = new ConnectionModel
+                {
+                    Server = vm.Server,
+                    Database = vm.Database,
+                    Username = vm.User,
+                    Password = vm.Password
+                };
+
+                _connectionString = _dbCHService.BuildConnectionString(connectionModel);
+                bool isConnected = await _dbCHService.TestConnectionAsync(_connectionString);
+
+                if (isConnected)
+                {
+                    MessageBox.Show("Successfully connected to the database.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _selectedTableName = vm.SelectedTable;
+                    _dbCrudVm = new DBCRUDVM(new DBDataInfo(_connectionString));
+                    DataTable = await _dbCHService.LoadDataAsync(_connectionString, _selectedTableName);
+                    var dataPage = new DataPage();
+                    dataPage.LoadData(DataTable);
+                    NavigateToPage(dataPage);
+                }
+                else
+                {
+                    MessageBox.Show("Failed to connect to the database.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
-        private void OpenReport()
+        public void NavigateToAnalysisPage()
         {
             var analysisPage = new AnalysisPage();
-            NavigationService.Navigate(analysisPage);
+            var analysisVM = new AnalysisVM(DataTable);
+            analysisPage.DataContext = analysisVM;
+            NavigateToPage(analysisPage);
         }
 
-        private void OpenData()
+        private void NavigateToDataPage()
         {
             var dataPage = new DataPage();
-            NavigationService.Navigate(dataPage);
+            NavigateToPage(dataPage);
         }
 
         private void ShowAbout()
@@ -110,6 +189,84 @@ namespace ThesisProjectARM.UI.ViewModels
         private void ExitApplication()
         {
             Application.Current.Shutdown();
+        }
+
+        private async Task AddData()
+        {
+            var newData = new DynamicDataModel();
+            if (_csvDataInfo != null)
+            {
+                DataTable.Rows.Add(newData.ToDataRow(DataTable));
+                await _csvDataInfo.SaveDataAsync(DataTable);
+            }
+            else if (_dbCrudVm != null)
+            {
+                await _dbCrudVm.InsertData(_selectedTableName, newData);
+            }
+        }
+
+        private async Task EditData()
+        {
+            var selectedData = DataCollection.FirstOrDefault();
+            if (selectedData != null)
+            {
+                if (_csvDataInfo != null)
+                {
+                    var row = DataTable.Rows.Cast<DataRow>().FirstOrDefault(r => r.Equals(selectedData.ToDataRow(DataTable)));
+                    if (row != null)
+                    {
+                        row.ItemArray = selectedData.ToDataRow(DataTable).ItemArray;
+                        await _csvDataInfo.SaveDataAsync(DataTable);
+                    }
+                }
+                else if (_dbCrudVm != null)
+                {
+                    await _dbCrudVm.UpdateData(_selectedTableName, selectedData, selectedData.Id);
+                }
+            }
+        }
+
+        private async Task DeleteData()
+        {
+            var selectedData = DataCollection.FirstOrDefault();
+            if (selectedData != null)
+            {
+                if (_csvDataInfo != null)
+                {
+                    var row = DataTable.Rows.Cast<DataRow>().FirstOrDefault(r => r.Equals(selectedData.ToDataRow(DataTable)));
+                    if (row != null)
+                    {
+                        DataTable.Rows.Remove(row);
+                        await _csvDataInfo.SaveDataAsync(DataTable);
+                    }
+                }
+                else if (_dbCrudVm != null)
+                {
+                    await _dbCrudVm.DeleteData(_selectedTableName, selectedData.Id);
+                }
+            }
+        }
+
+        private void NavigateToVisualizationPage()
+        {
+            var visualizationPage = new DataVisualizationPage();
+            var dataVisualizer = new DataVisualizer(); 
+            var visualizationVM = new DataVisualizationVM(dataVisualizer, DataTable);
+            visualizationPage.DataContext = visualizationVM;
+            NavigateToPage(visualizationPage);
+        }
+
+        private void NavigateToPage(Page page)
+        {
+            var navigationService = NavigationService;
+            if (navigationService != null)
+            {
+                navigationService.Navigate(page);
+            }
+            else
+            {
+                MessageBox.Show("Navigation service is not available.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private NavigationService NavigationService
@@ -126,5 +283,12 @@ namespace ThesisProjectARM.UI.ViewModels
                 return null;
             }
         }
+
+        protected new void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public new event PropertyChangedEventHandler PropertyChanged;
     }
 }

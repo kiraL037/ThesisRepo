@@ -1,4 +1,5 @@
-﻿using Services.Services;
+﻿using Core.Interfaces;
+using Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace ThesisProjectARM.Services.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ISecurityMethods _securityMethods;
 
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
+
         }
 
         public async Task<bool> AuthenticateUserAsync(string username, string password)
@@ -23,8 +26,7 @@ namespace ThesisProjectARM.Services.Services
             var user = await _userRepository.GetUserByUsernameAsync(username);
             if (user != null)
             {
-                var hashedPassword = SecurityMethods.HashPassword(password, user.Salt);
-                return SecurityMethods.VerifyPassword(password, user.PasswordHash, user.Salt);
+                return _securityMethods.VerifyPassword(password, user.PasswordHash);
             }
             return false;
         }
@@ -36,19 +38,17 @@ namespace ThesisProjectARM.Services.Services
                 throw new Exception("User already exists.");
             }
 
-            var salt = SecurityMethods.GenerateSalt();
-            var hashedPassword = SecurityMethods.HashPassword(password, salt);
+            var hashedPassword = _securityMethods.HashPassword(password, out string salt);
 
             var user = new User
             {
                 Username = username,
                 PasswordHash = hashedPassword,
-                Salt = salt,
                 IsAdmin = isAdmin
             };
 
             await _userRepository.CreateUserAsync(user);
-            return true; // Возвращаем true, если регистрация прошла успешно
+            return true;
         }
     }
 }
