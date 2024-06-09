@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using ThesisProjectARM.UI.ViewModels;
+using UI.ViewModels;
 
-namespace ThesisProjectARM.UI.Views.Pages
+namespace UI.Views.Pages
 {
     /// <summary>
     /// Логика взаимодействия для AnalysisPage.xaml

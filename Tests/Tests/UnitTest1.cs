@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
 using System.Threading.Tasks;
-using ThesisProjectARM.Services.Services;
-using ThesisProjectARM.Core.Models;
+using Services.Services;
+using Core.Models;
 
-namespace ThesisProjectARM.Tests.Tests
+namespace Tests.Tests
 {
     [TestClass]
     public class DataServiceTests

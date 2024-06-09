@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using ThesisProjectARM.Core.Interfaces;
+using Core.Interfaces;
 
-namespace ThesisProjectARM.Services.Services
+namespace Services.Services
 {
     public class DataNormalizer : IDataNormalizer
     {

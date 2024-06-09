@@ -1,14 +1,9 @@
 ﻿using Core.Interfaces;
-using Services.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.Core.Models;
+using Core.Models;
 
-namespace ThesisProjectARM.Services.Services
+namespace Services.Services
 {
     public class AdminService 
     {

@@ -52,7 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Interfaces\IClassificationClustering.cs" />
     <Compile Include="Interfaces\IDataAnalyzer.cs" />
     <Compile Include="Interfaces\IDatabaseService.cs" />

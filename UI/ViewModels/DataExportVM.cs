@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ThesisProjectARM.Core.Interfaces;
+﻿using System.Data;
+using Core.Interfaces;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class DataExportVM
     {

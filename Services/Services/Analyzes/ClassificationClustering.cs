@@ -2,13 +2,12 @@
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using ThesisProjectARM.Core.Interfaces;
+using Core.Interfaces;
 using Accord.MachineLearning;
-using Accord.MachineLearning.VectorMachines;
 using Accord.MachineLearning.VectorMachines.Learning;
 using Accord.Statistics.Kernels;
 
-namespace ThesisProjectARM.Services.Services.Analyzes
+namespace Services.Services.Analyzes
 {
     public class ClassificationClustering : IClassificationClustering
     {

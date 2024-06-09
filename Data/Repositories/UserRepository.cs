@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Runtime;
-using System.Text;
 using System.Threading.Tasks;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.Core.Models;
+using Core.Interfaces;
+using Core.Models;
 using NLog;
-using ThesisProjectARM.Data.Repositories;
 
-namespace ThesisProjectARM.Data.Repositories
+namespace Data.Repositories
 {
     public class UserRepository : IUserRepository
     {

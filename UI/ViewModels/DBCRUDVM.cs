@@ -5,8 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ThesisProjectARM.Core.Models;
-using ThesisProjectARM.Core.Interfaces;
+using Core.Models;
+using Core.Interfaces;
 
 namespace UI.ViewModels
 {

@@ -4,15 +4,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using SimpleInjector;
 using NLog;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.UI.ViewModels;
-using ThesisProjectARM.UI.Views.Windows;
-using ThesisProjectARM.Services.Services;
-using UI.Properties;
-using ThesisProjectARM.Data.Repositories;
-using ThesisProjectARM.Core.Models;
 using Core.Interfaces;
+using UI.ViewModels;
+using UI.Views.Windows;
 using Services.Services;
+using UI.Properties;
+using Data.Repositories;
+using Core.Models;
 
 namespace UI
 {
@@ -32,10 +30,10 @@ namespace UI
 
         private void ConfigureContainer()
         {
-            // Регистрация ISecurityMethods
+            // Register ISecurityMethods
             _container.Register<ISecurityMethods, SecurityMethods>(Lifestyle.Singleton);
 
-            // Остальные регистрации
+            // Other registrations
             _container.Register<IUserRepository>(() =>
             {
                 string connectionString = Settings.Default.ConnectionString;
@@ -44,11 +42,28 @@ namespace UI
 
             _container.Register<IUserService, UserService>(Lifestyle.Singleton);
             _container.Register<IDatabaseService, DBService>(Lifestyle.Singleton);
+
+            // Register ViewModels
             _container.Register<ManagerVM>(Lifestyle.Singleton);
             _container.Register<RegistrationVM>(Lifestyle.Singleton);
             _container.Register<AuthenticationWindowVM>(Lifestyle.Singleton);
             _container.Register<SelectTableVM>(Lifestyle.Singleton);
             _container.Register<FirstSetupWindowVM>(Lifestyle.Singleton);
+
+            // Register Views (Windows)
+            RegisterWindows();
+        }
+
+        private void RegisterWindows()
+        {
+            _container.Register<WelcomeWindow>(Lifestyle.Transient);
+            _container.Register<MainUIWindow>(Lifestyle.Transient);
+            _container.Register<MainWindow>(Lifestyle.Transient);
+            _container.Register<TipsWindow>(Lifestyle.Transient);
+            _container.Register<SelectTableDialog>(Lifestyle.Transient);
+            _container.Register<RegistrationWindow>(Lifestyle.Transient);
+            _container.Register<FirstSetupWindow>(Lifestyle.Transient);
+            _container.Register<ManagerWindow>(Lifestyle.Transient);
         }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -66,20 +81,6 @@ namespace UI
                 await InitializeDatabaseAsync(dbService, connectionString);
                 ShowWelcomeWindow();
             }
-            RegisterWindows();
-        }
-
-        private void RegisterWindows()
-        {
-
-            _container.Register<WelcomeWindow>(Lifestyle.Transient);
-            _container.Register<MainUIWindow>(Lifestyle.Transient);
-            _container.Register<MainWindow>(Lifestyle.Transient);
-            _container.Register<TipsWindow>(Lifestyle.Transient);
-            _container.Register<SelectTableDialog>(Lifestyle.Transient);
-            _container.Register<RegistrationWindow>(Lifestyle.Transient);
-            _container.Register<FirstSetupWindow>(Lifestyle.Transient);
-            _container.Register<ManagerWindow>(Lifestyle.Transient);
         }
 
         private void OpenFirstSetupWindow()

@@ -10,11 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.Services.Services;
-using ThesisProjectARM.UI.Views.Windows;
+using UI.Views.Windows;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class RegistrationVM : ViewModelBase, INotifyPropertyChanged
     {

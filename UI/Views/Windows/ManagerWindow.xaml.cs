@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using ThesisProjectARM.UI.ViewModels;
+using UI.ViewModels;
 
-namespace ThesisProjectARM.UI.Views.Windows
+namespace UI.Views.Windows
 {
     /// <summary>
     /// Логика взаимодействия для ManagerWindow.xaml

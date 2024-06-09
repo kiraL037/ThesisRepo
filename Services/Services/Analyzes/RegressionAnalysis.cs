@@ -2,11 +2,10 @@
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using ThesisProjectARM.Core.Interfaces;
+using Core.Interfaces;
 using Microsoft.ML;
-using Microsoft.ML.Data;
 
-namespace ThesisProjectARM.Services.Services.Analyzes
+namespace Services.Services.Analyzes
 {
     public class RegressionAnalysis : IRegressionAnalysis
     {

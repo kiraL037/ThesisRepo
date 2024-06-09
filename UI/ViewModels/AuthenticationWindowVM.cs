@@ -2,14 +2,14 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.UI.Views.Windows;
+using Core.Interfaces;
+using UI.Views.Windows;
 using System.Windows;
 using System.Linq;
 using System.Security;
 using System;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class AuthenticationWindowVM : INotifyPropertyChanged
     {

@@ -7,11 +7,11 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ThesisProjectARM.Services.Services;
+using Services.Services;
 using System.Windows.Navigation;
-using ThesisProjectARM.UI.Views.Pages;
+using UI.Views.Pages;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class DataPageVM : ViewModelBase
     {

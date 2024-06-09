@@ -1,16 +1,12 @@
 ﻿using Core.Interfaces;
 using OxyPlot;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ThesisProjectARM.Core.Interfaces;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class DataVisualizationVM : ViewModelBase
     {

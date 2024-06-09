@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
-using System.Text;
-using ThesisProjectARM.Core.Interfaces;
-using System.Threading.Tasks;
+using Core.Interfaces;
 
-namespace ThesisProjectARM.Services.Services
+namespace Services.Services
 {
     public class RemoveDuplicates : IRemoveDuplicates
     {

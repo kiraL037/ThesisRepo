@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ThesisProjectARM.Core.Models;
-using ThesisProjectARM.Core.Interfaces;
+using Core.Models;
+using Core.Interfaces;
 
-namespace ThesisProjectARM.Services.Services
+namespace Services.Services
 {
     public class DBDataInfo : IDataInfo
     {

@@ -11,14 +11,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.Core.Models;
-using ThesisProjectARM.Services.Services;
-using ThesisProjectARM.UI.Views.Pages;
-using ThesisProjectARM.UI.Views.Windows;
+using Core.Models;
+using Services.Services;
+using UI.Views.Pages;
+using UI.Views.Windows;
 using UI.ViewModels;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class MainUIVM : ViewModelBase 
     {

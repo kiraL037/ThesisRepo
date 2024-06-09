@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
-using ThesisProjectARM.UI.Views.Windows;
+using UI.Views.Windows;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class TipsWindowVM : ViewModelBase
     {

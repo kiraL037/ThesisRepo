@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OxyPlot;
 using OxyPlot.Series;
-using OxyPlot.Wpf;
-using System.Windows; 
-using ThesisProjectARM.Core.Interfaces;
+using Core.Interfaces;
 
-namespace ThesisProjectARM.Services.Services
+namespace Services.Services
 {
     public class DataVisualizer : IDataVisualizer
     {

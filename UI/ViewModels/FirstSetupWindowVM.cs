@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using ThesisProjectARM.UI.Views.Windows;
-using ThesisProjectARM.Core.Models;
-using ThesisProjectARM.Core.Interfaces;
+using UI.Views.Windows;
+using Core.Models;
+using Core.Interfaces;
 using System.Configuration;
 using UI.Properties;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class FirstSetupWindowVM : INotifyPropertyChanged
     {
@@ -114,15 +114,10 @@ namespace ThesisProjectARM.UI.ViewModels
                 Server = Server,
                 Database = Database,
                 Username = IsSqlAuthSelected ? Username : null,
-                Password = IsSqlAuthSelected ? Password : null,
-                ConnectionString = _databaseService.BuildConnectionString(new ConnectionModel
-                {
-                    Server = Server,
-                    Database = Database,
-                    Username = IsSqlAuthSelected ? Username : null,
-                    Password = IsSqlAuthSelected ? Password : null
-                })
+                Password = IsSqlAuthSelected ? Password : null
             };
+
+            connection.ConnectionString = _databaseService.BuildConnectionString(connection);
 
             var result = await _databaseService.SetupDatabaseAsync(connection);
 
@@ -136,6 +131,7 @@ namespace ThesisProjectARM.UI.ViewModels
             else
             {
                 MessageBox.Show("Failed to setup database. Please check your connection details.");
+
             }
         }
 

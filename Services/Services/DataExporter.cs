@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ThesisProjectARM.Core.Interfaces;
+using Core.Interfaces;
 
-namespace ThesisProjectARM.Services.Services
+namespace Services.Services
 {
     public class DataExporter : IDataExporter
     {

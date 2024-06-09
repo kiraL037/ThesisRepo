@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using ThesisProjectARM.UI.Views.Windows;
+using UI.Views.Windows;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class WelcomeWindowVM : ViewModelBase
     {

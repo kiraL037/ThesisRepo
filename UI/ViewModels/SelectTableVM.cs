@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.Core.Models;
-using ThesisProjectARM.Services.Services;
+using Core.Interfaces;
+using Core.Models;
+using Services.Services;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class SelectTableVM : ViewModelBase
     {

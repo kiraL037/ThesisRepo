@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using Microsoft.Extensions.Caching.Memory;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ThesisProjectARM.Services.Services
+namespace Services.Services
 {
     public class DataCacheService
     {

@@ -1,18 +1,12 @@
 ﻿using Core.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.Services.Services.Analyzes;
+using Services.Services.Analyzes;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class AnalysisVM : ViewModelBase
     {

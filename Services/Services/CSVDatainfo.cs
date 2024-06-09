@@ -1,19 +1,14 @@
 ﻿using Core.Interfaces;
-using OxyPlot;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.Core.Models;
+using Core.Models;
 using CsvHelper;
 
 
-namespace ThesisProjectARM.Services.Services
+namespace Services.Services
 {
     public class CSVDatainfo : IGetData
     {

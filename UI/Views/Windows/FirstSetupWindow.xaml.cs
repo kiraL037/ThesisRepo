@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using ThesisProjectARM.Core.Models;
-using ThesisProjectARM.UI.ViewModels;
+using Core.Models;
+using UI.ViewModels;
 
-namespace ThesisProjectARM.UI.Views.Windows
+namespace UI.Views.Windows
 {
     /// <summary>
     /// Логика взаимодействия для FirstSetupWindow.xaml

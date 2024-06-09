@@ -5,10 +5,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ThesisProjectARM.Core.Models;
-using ThesisProjectARM.Core.Interfaces;
+using Core.Models;
+using Core.Interfaces;
 
-namespace ThesisProjectARM.UI.ViewModels
+namespace UI.ViewModels
 {
     public class ManagerVM : ViewModelBase
     {

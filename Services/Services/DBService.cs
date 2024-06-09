@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using ThesisProjectARM.Core.Interfaces;
-using ThesisProjectARM.Core.Models;
+using Core.Interfaces;
+using Core.Models;
 using NLog;
 
-namespace ThesisProjectARM.Services.Services
+namespace Services.Services
 {
     public class DBService : IDatabaseService
     {
@@ -45,7 +45,16 @@ namespace ThesisProjectARM.Services.Services
 
         public string BuildConnectionString(ConnectionModel connection)
         {
-            return $"Server={connection.Server};Database={connection.Database};User Id={connection.Username};Password={connection.Password};";
+            if (string.IsNullOrEmpty(connection.Username) && string.IsNullOrEmpty(connection.Password))
+            {
+                // Windows Authentication
+                return $"Server={connection.Server};Database={connection.Database};Integrated Security=True;";
+            }
+            else
+            {
+                // SQL Server Authentication
+                return $"Server={connection.Server};Database={connection.Database};User Id={connection.Username};Password={connection.Password};";
+            }
         }
 
         private async Task CreateDatabaseIfNotExistsAsync(SqlConnection conn, string databaseName)
