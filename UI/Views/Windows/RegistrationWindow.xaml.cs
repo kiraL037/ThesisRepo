@@ -9,9 +9,13 @@ namespace UI.Views.Windows
     /// </summary>
     public partial class RegistrationWindow : Window
     {
-        public RegistrationWindow()
+        private readonly RegistrationVM _viewModel;
+
+        public RegistrationWindow(RegistrationVM viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
 
         public void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

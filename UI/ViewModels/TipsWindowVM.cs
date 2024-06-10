@@ -32,7 +32,8 @@ namespace UI.ViewModels
 
         private void BackToWelcome(object parameter)
         {
-            var welcomeWindow = new WelcomeWindow();
+            var viewModel = new WelcomeWindowVM(); 
+            var welcomeWindow = new WelcomeWindow(viewModel); 
             welcomeWindow.Show();
             Application.Current.MainWindow.Close();
         }

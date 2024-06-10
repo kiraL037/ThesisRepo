@@ -8,10 +8,13 @@ namespace UI.Views.Windows
     /// </summary>
     public partial class ManagerWindow : Window
     {
-        public ManagerWindow()
+        private readonly ManagerVM _viewModel;
+
+        public ManagerWindow(ManagerVM viewModel)
         {
             InitializeComponent();
-            DataContext = new ManagerVM();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
     }
 }

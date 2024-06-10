@@ -9,9 +9,13 @@ namespace UI.Views.Windows
     /// </summary>
     public partial class AuthenticationWindow : Window
     {
-        public AuthenticationWindow()
+        private readonly AuthenticationWindowVM _viewModel;
+
+        public AuthenticationWindow(AuthenticationWindowVM viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
 
         public void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

@@ -10,6 +10,7 @@ using System.Windows.Input;
 using Services.Services;
 using System.Windows.Navigation;
 using UI.Views.Pages;
+using static UI.App;
 
 namespace UI.ViewModels
 {
@@ -51,7 +52,7 @@ namespace UI.ViewModels
                 var csvDataInfo = new CSVDatainfo(filePath);
                 _dataTable = await csvDataInfo.GetDataAsync();
                 DataRows = new ObservableCollection<DataRow>(_dataTable.AsEnumerable());
-                _mainUIVM.DataTable = _dataTable; 
+                _mainUIVM.DataTable = _dataTable;
             }
         }
 

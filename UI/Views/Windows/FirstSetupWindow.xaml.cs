@@ -19,9 +19,9 @@ namespace UI.Views.Windows
             DataContext = _viewModel;
         }
 
-        public void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (DataContext is RegistrationVM viewModel)
+            if (DataContext is FirstSetupWindowVM viewModel)
             {
                 viewModel.Password = ((PasswordBox)sender).Password;
             }

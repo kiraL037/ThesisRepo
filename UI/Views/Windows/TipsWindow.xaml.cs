@@ -8,10 +8,13 @@ namespace UI.Views.Windows
     /// </summary>
     public partial class TipsWindow : Window
     {
-        public TipsWindow()
+        private readonly TipsWindowVM _viewModel;
+
+        public TipsWindow(TipsWindowVM viewModel)
         {
             InitializeComponent();
-            DataContext = new TipsWindowVM();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
     }
 }

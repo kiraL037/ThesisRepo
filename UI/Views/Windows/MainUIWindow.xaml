@@ -19,7 +19,7 @@
                 <MenuItem Header="Выход" Command="{Binding ExitCommand}"/>
             </Menu>
             <ToolBarTray DockPanel.Dock="Top">
-                <ToolBar Background="MediumSeaGreen">
+                <ToolBar Background="LightGreen">
                     <Button Content="Загрузить файл" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
                     <Button Content="Сохранить данные" Command="{Binding SaveDataCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
                     <Button Content="Подключить базу данных" Command="{Binding ConnectToDBCommand}" Style="{StaticResource SecondaryButtonStyle}"/>

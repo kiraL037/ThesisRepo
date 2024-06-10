@@ -85,8 +85,9 @@ namespace UI.ViewModels
 
         private void OpenMainUIWindow()
         {
-            var mainWindow = new MainUIWindow();
-            mainWindow.Show();
+            var viewModel = new MainUIVM(); 
+            var mainUIWindow = new MainUIWindow(viewModel); 
+            mainUIWindow.Show();
             CloseWindow();
         }
 

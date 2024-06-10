@@ -8,10 +8,13 @@ namespace UI.Views.Windows
     /// </summary>
     public partial class SelectTableDialog : Window
     {
-        public SelectTableDialog()
+        private readonly SelectTableVM _viewModel;
+
+        public SelectTableDialog(SelectTableVM viewModel)
         {
             InitializeComponent();
-            DataContext = new SelectTableVM();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)

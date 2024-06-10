@@ -22,7 +22,6 @@ namespace UI.ViewModels
         private string _password;
         private string _confirmPassword;
         public ICommand RegisterCommand => new RelayCommand(async _ => await Register());
-
         public RegistrationVM(IUserService userService, ISecurityMethods securityMethods)
         {
             _userService = userService;
@@ -110,7 +109,8 @@ namespace UI.ViewModels
 
         private void AuthWindow()
         {
-            var authWindow = new AuthenticationWindow();
+            var viewModel = new AuthenticationWindowVM(_userService);
+            var authWindow = new AuthenticationWindow(viewModel);
             authWindow.Show();
             CloseWindow();
         }

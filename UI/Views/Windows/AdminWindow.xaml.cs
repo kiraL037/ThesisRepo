@@ -17,9 +17,13 @@ namespace UI.Views.Windows
     /// </summary>
     public partial class AdminWindow : Window
     {
-        public AdminWindow()
+        private readonly AdminWindowVM _viewModel;
+
+        public AdminWindow(AdminWindowVM viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
 
         public void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using UI.ViewModels;
 
 namespace UI.Views.Windows
 {
@@ -7,9 +8,13 @@ namespace UI.Views.Windows
     /// </summary>
     public partial class WelcomeWindow : Window
     {
-        public WelcomeWindow()
+        private readonly WelcomeWindowVM _viewModel;
+
+        public WelcomeWindow(WelcomeWindowVM viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
     }
 }

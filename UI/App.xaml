@@ -4,12 +4,13 @@
              xmlns:local="clr-namespace:UI">
     <Application.Resources>
         <!-- Основная цветовая палитра -->
-        <Color x:Key="PrimaryColor">#EBEBD3</Color>
+        <Color x:Key="PrimaryColor">#F95738</Color>
         <Color x:Key="PrimaryLightColor">#F4D35E</Color>
         <Color x:Key="PrimaryDarkColor">#F26430</Color>
         <Color x:Key="SecondaryColor">#EE964B</Color>
-        <Color x:Key="BackgroundColor">#F95738</Color>
-        <Color x:Key="AccentColor">#34113F</Color>
+        <Color x:Key="BackgroundColor">#F26430</Color>
+        <Color x:Key="ForegroundColor">#F3F9D2</Color>
+        <Color x:Key="AccentColor">#000000</Color>
 
         <!-- Кисти -->
         <SolidColorBrush x:Key="PrimaryColorBrush" Color="{StaticResource PrimaryColor}"/>
@@ -17,14 +18,25 @@
         <SolidColorBrush x:Key="PrimaryDarkColorBrush" Color="{StaticResource PrimaryDarkColor}"/>
         <SolidColorBrush x:Key="SecondaryColorBrush" Color="{StaticResource SecondaryColor}"/>
         <SolidColorBrush x:Key="BackgroundColorBrush" Color="{StaticResource BackgroundColor}"/>
-        <SolidColorBrush x:Key="ForegroundColorBrush" Color="{StaticResource BackgroundColor}"/>
+        <SolidColorBrush x:Key="ForegroundColorBrush" Color="{StaticResource ForegroundColor}"/>
         <SolidColorBrush x:Key="AccentColorBrush" Color="{StaticResource AccentColor}"/>
+
+        <!-- Общие настройки шрифта -->
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style TargetType="{x:Type Control}">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
 
         <!-- Общие стили -->
         <Style x:Key="BaseButtonStyle" TargetType="Button">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}"/>
@@ -74,20 +86,23 @@
         <Style x:Key="DataGridStyle" TargetType="DataGrid">
             <Setter Property="AutoGenerateColumns" Value="True"/>
             <Setter Property="Background" Value="{StaticResource BackgroundColorBrush}"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}"/>
+            <Setter Property="Foreground" Value="#000000"/>
             <Setter Property="GridLinesVisibility" Value="None"/>
             <Setter Property="RowBackground" Value="White"/>
             <Setter Property="AlternatingRowBackground" Value="#F2F2F2"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="18"/>
         </Style>
 
         <Style x:Key="TextBoxStyle" TargetType="TextBox">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="BorderBrush" Value="{StaticResource PrimaryColorBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Background" Value="{StaticResource BackgroundColorBrush}"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}"/>
+            <Setter Property="Foreground" Value="#000000"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="BorderBrush" Value="{StaticResource PrimaryLightColorBrush}"/>
@@ -99,9 +114,10 @@
         </Style>
 
         <Style x:Key="LabelStyle" TargetType="Label">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}"/>
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}"/>
+                <Setter Property="Margin" Value="5"/>
         </Style>
 
         <Style x:Key="TextBlockStyle" TargetType="TextBlock">
@@ -109,6 +125,8 @@
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="Margin" Value="0,5"/>
             <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
         </Style>
 
     </Application.Resources>

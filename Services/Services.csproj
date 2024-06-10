@@ -187,7 +187,6 @@
     <Compile Include="Services\DataAnalyzer.cs" />
     <Compile Include="Services\DataCacheService.cs" />
     <Compile Include="Services\DataExporter.cs" />
-    <Compile Include="Services\DataFilter.cs" />
     <Compile Include="Services\DataNormalizer.cs" />
     <Compile Include="Services\DataPrediction.cs" />
     <Compile Include="Services\DBCHService.cs" />

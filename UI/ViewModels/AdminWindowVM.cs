@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -63,31 +64,38 @@ namespace UI.ViewModels
 
         private async Task Register()
         {
-            if (Password.Length < 8 || !IsPasswordComplex(Password))
+            try
             {
-                MessageBox.Show("Password must be at least 8 characters long and contain a number, an uppercase letter, and a special character.");
-                return;
-            }
+                if (Password.Length < 8 || !IsPasswordComplex(Password))
+                {
+                    MessageBox.Show("Password must be at least 8 characters long and contain a number, an uppercase letter, and a special character.");
+                    return;
+                }
 
-            if (Password != ConfirmPassword)
-            {
-                MessageBox.Show("Passwords do not match.");
-                return;
-            }
+                if (Password != ConfirmPassword)
+                {
+                    MessageBox.Show("Passwords do not match.");
+                    return;
+                }
 
-            var passwordHash = _securityMethods.HashPassword(Password, out string salt);
-            var result = await _userService.RegisterUserAsync(Username, passwordHash, true); 
+                var passwordHash = _securityMethods.HashPassword(Password, out string salt);
+                var result = await _userService.RegisterUserAsync(Username, passwordHash, true);
 
-            if (result)
-            {
-                MessageBox.Show("Manager registered successfully.");
-                CloseWindow();
-                // Открытие окна приветствия после успешной регистрации менеджера
-                OpenWelcomeWindow();
+                if (result)
+                {
+                    MessageBox.Show("Manager registered successfully.");
+                    CloseWindow();
+                    // Открытие окна приветствия после успешной регистрации менеджера
+                    OpenWelcomeWindow();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to register manager.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Failed to register manager.");
+                MessageBox.Show($"An error occurred during registration: {ex.Message}");
             }
         }
 
@@ -105,7 +113,8 @@ namespace UI.ViewModels
 
         private void OpenWelcomeWindow()
         {
-            var welcomeWindow = new WelcomeWindow();
+            var viewModel = new WelcomeWindowVM();
+            var welcomeWindow = new WelcomeWindow(viewModel);
             welcomeWindow.Show();
             CloseWindow();
         }

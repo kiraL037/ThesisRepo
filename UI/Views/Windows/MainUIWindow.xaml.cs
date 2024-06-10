@@ -9,9 +9,13 @@ namespace UI.Views.Windows
     /// </summary>
     public partial class MainUIWindow : Window
     {
-        public MainUIWindow()
+        private readonly MainUIVM _viewModel;
+
+        public MainUIWindow(MainUIVM viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = _viewModel;
         }
     }
 }
