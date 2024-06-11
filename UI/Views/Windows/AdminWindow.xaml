@@ -3,14 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UI.Views.Windows"
+        xmlns:local="clr-namespace:UI.Views.Windows" 
+        xmlns:viewmodels="clr-namespace:UI.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:AdminWindowVM}"
         mc:Ignorable="d"
         Title="AdminWindow" Height="450" Width="800">
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="Введите данные для регистрации менеджера:" Style="{StaticResource TextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0"/>
             <Label Content="Логин" HorizontalAlignment="Center" Margin="0,10,0,5" Style="{StaticResource LabelStyle}"/>
-            <TextBox x:Name="UsernameTextBox" Text="{Binding Username}" Style="{StaticResource TextBoxStyle}" TextWrapping="Wrap" Width="204" HorizontalAlignment="Center" Margin="0,5,0,5"/>
+            <TextBox x:Name="UsernameTextBox" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}" TextWrapping="Wrap" Width="204" HorizontalAlignment="Center" Margin="0,5,0,5"/>
 
             <Label Content="Пароль" HorizontalAlignment="Center" Margin="0,5,0,5" Style="{StaticResource LabelStyle}"/>
             <PasswordBox x:Name="PasswordBox" PasswordChanged="PasswordBox_PasswordChanged" Width="208" Margin="0,5,0,5" Height="28"/>

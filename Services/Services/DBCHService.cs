@@ -59,7 +59,7 @@ namespace Services.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error loading data from database: {ex.Message}");
+                throw new Exception($"Ошибка загрузки БД: {ex.Message}");
             }
 
             return dataTable;
@@ -82,7 +82,7 @@ namespace Services.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting tables from database: {ex.Message}");
+                throw new Exception($"Ошибка получения таблицы из БД: {ex.Message}");
             }
 
             return tables;
@@ -112,7 +112,7 @@ namespace Services.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting columns from database: {ex.Message}");
+                throw new Exception($"Ошибка получения столбцов из БД: {ex.Message}");
             }
 
             return columns;

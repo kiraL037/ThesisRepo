@@ -26,8 +26,12 @@ namespace UI
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        public static IUserService UserService { get; private set; }
+
         private IDatabaseService _dbService;
         private IUserRepository _userRepository;
+        private ISecurityMethods _securityMethods;
+        private AuthenticationWindowVM _authWindowVM;
         private FirstSetupWindowVM _firstSetupWindowVM;
         private AdminWindowVM _adminWindowVM;
         private WelcomeWindowVM _welcomeWindowVM;
@@ -39,12 +43,13 @@ namespace UI
             // Инициализация сервисов
             _dbService = new DBService();
             _userRepository = new UserRepository(Settings.Default.ConnectionString);
-            var userService = new UserService(_userRepository);
-            var securityMethods = new SecurityMethods();
+            _securityMethods = new SecurityMethods();
+            UserService = new UserService(_userRepository, _securityMethods);
 
             // Инициализация ViewModels
+            _authWindowVM = new AuthenticationWindowVM(UserService);
             _firstSetupWindowVM = new FirstSetupWindowVM(_dbService);
-            _adminWindowVM = new AdminWindowVM(userService, securityMethods);
+            _adminWindowVM = new AdminWindowVM(UserService, _securityMethods);
             _welcomeWindowVM = new WelcomeWindowVM();
 
             string connectionString = Settings.Default.ConnectionString;
@@ -94,13 +99,13 @@ namespace UI
 
             if (adminExists)
             {
-                var adminWindow = new AdminWindow(_adminWindowVM);
-                adminWindow.ShowDialog();
+                var welcomeWindow = new WelcomeWindow(_welcomeWindowVM);
+                welcomeWindow.ShowDialog();
             }
             else
             {
-                var welcomeWindow = new WelcomeWindow(_welcomeWindowVM);
-                welcomeWindow.ShowDialog();
+                var adminWindow = new AdminWindow(_adminWindowVM);
+                adminWindow.ShowDialog();
             }
         }
     }

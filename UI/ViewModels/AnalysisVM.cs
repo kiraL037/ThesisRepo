@@ -24,8 +24,17 @@ namespace UI.ViewModels
             _regressionAnalysisService = new RegressionAnalysis();
             _statisticalAnalysisService = new StatisticalAnalysis();
             _timeSeriesAnalysisService = new TimeSeriesAnalysis();
+
             _dataTable = dataTable;
-            AvailableColumns = new ObservableCollection<string>(_dataTable.Columns.Cast<DataColumn>().Select(col => col.ColumnName));
+            if (_dataTable != null)
+            {
+                AvailableColumns = new ObservableCollection<string>(_dataTable.Columns.Cast<DataColumn>().Select(col => col.ColumnName));
+            }
+            else
+            {
+                AvailableColumns = new ObservableCollection<string>();
+            }
+
             _selectedColumns = new ObservableCollection<string>();
 
             PerformKMeansClusteringCommand = new RelayCommand(async (param) => await PerformKMeansClusteringAsync(3), CanExecuteAnalysis);
@@ -71,7 +80,7 @@ namespace UI.ViewModels
 
         private bool CanExecuteAnalysis(object parameter)
         {
-            return SelectedColumns != null && SelectedColumns.Any();
+            return _dataTable != null && SelectedColumns != null && SelectedColumns.Any();
         }
 
         private async Task PerformKMeansClusteringAsync(int clusterCount)

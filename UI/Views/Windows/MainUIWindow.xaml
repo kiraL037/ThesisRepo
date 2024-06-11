@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UI.Views.Windows"
+        xmlns:local="clr-namespace:UI.Views.Windows" 
+        xmlns:viewmodels="clr-namespace:UI.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainUIVM}"
         mc:Ignorable="d"
         Title="MainUIWindow" Height="450" Width="800">
     <Grid>
@@ -11,7 +13,7 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Файл">
                     <MenuItem Header="Открыть" Command="{Binding LoadDataCommand}" />
-                    <MenuItem Header="Сохранить" Command="{Binding SaveDataCommand}"/>
+                    <MenuItem Header="Сохранить" Command="{Binding SaveChangesCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Помощь">
                     <MenuItem Header="О программе" Command="{Binding AboutCommand}"/>
@@ -21,19 +23,19 @@
             <ToolBarTray DockPanel.Dock="Top">
                 <ToolBar Background="LightGreen">
                     <Button Content="Загрузить файл" Command="{Binding LoadDataCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
-                    <Button Content="Сохранить данные" Command="{Binding SaveDataCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
+                    <Button Content="Загрузить файл" Command="{Binding AddFileCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
+                    <Button Content="Сохранить данные" Command="{Binding SaveChangesCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
                     <Button Content="Подключить базу данных" Command="{Binding ConnectToDBCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
                     <Button Content="Анализ" Command="{Binding AnalysisCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
                 </ToolBar>
             </ToolBarTray>
             <StackPanel Background="LightGreen" Height="356">
-                <Button Content="Добавить" Command="{Binding AddDataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+                <Button Content="Добавить" Command="{Binding AddFileCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
                 <Button Content="Редактировать" Command="{Binding EditDataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
                 <Button Content="Удалить" Command="{Binding DeleteDataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
-                <Button Content="Данные" Command="{Binding DataCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
             </StackPanel>
-            <Frame x:Name="MainFrame"/>
-            <DataGrid ItemsSource="{Binding DataTable}" Style="{StaticResource DataGridStyle}" AutoGenerateColumns="True" Margin="10"/>
+            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+            <DataGrid ItemsSource="{Binding DataCollection}" Style="{StaticResource DataGridStyle}" AutoGenerateColumns="True" Margin="10"/>
         </DockPanel>
     </Grid>
 </Window>

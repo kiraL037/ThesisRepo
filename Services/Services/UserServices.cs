@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Core.Models;
+using System.Windows;
 
 namespace Services.Services
 {
@@ -10,10 +11,10 @@ namespace Services.Services
         private readonly IUserRepository _userRepository;
         private readonly ISecurityMethods _securityMethods;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, ISecurityMethods securityMethods)
         {
             _userRepository = userRepository;
-
+            _securityMethods = securityMethods;
         }
 
         public async Task<bool> AuthenticateUserAsync(string username, string password)
@@ -21,24 +22,23 @@ namespace Services.Services
             var user = await _userRepository.GetUserByUsernameAsync(username);
             if (user != null)
             {
-                return _securityMethods.VerifyPassword(password, user.PasswordHash);
+                return _securityMethods.VerifyPassword(password, user.PasswordHash, user.Salt);
             }
             return false;
         }
 
-        public async Task<bool> RegisterUserAsync(string username, string password, bool isAdmin)
+        public async Task<bool> RegisterUserAsync(string username, string passwordHash, string salt, bool isAdmin)
         {
             if (await _userRepository.UserExistsAsync(username))
             {
                 throw new Exception("User already exists.");
             }
 
-            var hashedPassword = _securityMethods.HashPassword(password, out string salt);
-
             var user = new User
             {
                 Username = username,
-                PasswordHash = hashedPassword,
+                PasswordHash = passwordHash,
+                Salt = salt,
                 IsAdmin = isAdmin
             };
 

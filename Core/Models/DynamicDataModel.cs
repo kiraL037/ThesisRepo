@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Core.Models
@@ -12,6 +13,7 @@ namespace Core.Models
         {
             Data = new Dictionary<string, object>();
         }
+
         public DataRow ToDataRow(DataTable dataTable)
         {
             var row = dataTable.NewRow();
@@ -19,10 +21,20 @@ namespace Core.Models
             {
                 if (dataTable.Columns.Contains(key))
                 {
-                    row[key] = Data[key];
+                    row[key] = Data[key] ?? DBNull.Value;
                 }
             }
             return row;
+        }
+
+        public static DynamicDataModel FromDataRow(DataRow row)
+        {
+            var model = new DynamicDataModel();
+            foreach (DataColumn column in row.Table.Columns)
+            {
+                model.Data[column.ColumnName] = row[column];
+            }
+            return model;
         }
     }
 }

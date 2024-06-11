@@ -16,16 +16,19 @@ using Services.Services;
 using UI.Views.Pages;
 using UI.Views.Windows;
 using UI.ViewModels;
+using System.Globalization;
+using System.IO;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Collections.Generic;
 
 namespace UI.ViewModels
 {
-    public class MainUIVM : ViewModelBase 
+    public class MainUIVM : ViewModelBase
     {
         private IGetData _csvDataInfo;
         private IDBCHService _dbCHService;
         private DataTable _dataTable;
-        private Frame _mainFrame;
-        private DBCRUDVM _dbCrudVm;
         private string _selectedTableName;
         private string _connectionString;
 
@@ -36,6 +39,11 @@ namespace UI.ViewModels
             {
                 _dataTable = value;
                 OnPropertyChanged();
+                DataCollection.Clear();
+                foreach (DataRow row in _dataTable.Rows)
+                {
+                    DataCollection.Add(DynamicDataModel.FromDataRow(row));
+                }
             }
         }
 
@@ -48,8 +56,7 @@ namespace UI.ViewModels
         public ICommand DataCommand { get; }
         public ICommand AboutCommand { get; }
         public ICommand ExitCommand { get; }
-        public ICommand OpenFileCommand { get; }
-        public ICommand AddDataCommand { get; }
+        public ICommand AddFileCommand { get; }
         public ICommand EditDataCommand { get; }
         public ICommand DeleteDataCommand { get; }
 
@@ -65,46 +72,83 @@ namespace UI.ViewModels
             DataCommand = new RelayCommand((param) => NavigateToDataPage());
             AboutCommand = new RelayCommand((param) => ShowAbout());
             ExitCommand = new RelayCommand((param) => ExitApplication());
-            OpenFileCommand = new RelayCommand((param) => OpenFile());
-            AddDataCommand = new RelayCommand(async (param) => await AddData());
-            EditDataCommand = new RelayCommand(async (param) => await EditData());
-            DeleteDataCommand = new RelayCommand(async (param) => await DeleteData());
+            AddFileCommand = new RelayCommand(async (param) => await AddFile());
+            EditDataCommand = new RelayCommand((param) => EditData());
+            DeleteDataCommand = new RelayCommand((param) => DeleteData());
 
             NavigateToDataPage();
         }
 
-        private void OpenFile()
+        private async Task LoadDataFromCsv()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            var openFileDialog = new OpenFileDialog
             {
-                Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*"
+                Filter = "CSV файлы (*.csv)|*.csv|Все файлы (*.*)|*.*"
             };
 
             if (openFileDialog.ShowDialog() == true)
             {
                 string filePath = openFileDialog.FileName;
-                _csvDataInfo = new CSVDatainfo(filePath);
-            }
-        }
+                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    Delimiter = ",",
+                    HasHeaderRecord = true
+                };
 
-        private async Task LoadDataFromCsv()
-        {
-            if (_csvDataInfo == null)
-            {
-                MessageBox.Show("Please select a file first.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                try
+                {
+                    using (var reader = new StreamReader(filePath))
+                    using (var csv = new CsvReader(reader, config))
+                    {
+                        DataTable dataTable = new DataTable();
 
-            try
-            {
-                DataTable = await _csvDataInfo.GetDataAsync();
-                var dataPage = new DataPage();
-                dataPage.LoadData(DataTable);
-                NavigateToPage(dataPage);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading data from CSV: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        // Считываем заголовки
+                        csv.Read();
+                        csv.ReadHeader();
+
+                        if (csv.HeaderRecord != null)
+                        {
+                            foreach (var header in csv.HeaderRecord)
+                            {
+                                dataTable.Columns.Add(header);
+                            }
+                        }
+
+                        // Читаем строки данных и добавляем их в DataTable
+                        var records = csv.GetRecords<dynamic>();
+
+                        await Task.Run(() =>
+                        {
+                            foreach (var record in records)
+                            {
+                                if (record == null) continue;
+
+                                var dictionary = (IDictionary<string, object>)record;
+
+                                var row = dataTable.NewRow();
+                                foreach (var header in csv.HeaderRecord)
+                                {
+                                    if (dictionary.TryGetValue(header, out var value))
+                                    {
+                                        row[header] = value ?? DBNull.Value;
+                                    }
+                                }
+                                dataTable.Rows.Add(row);
+                            }
+                        });
+
+                        DataTable = dataTable;
+                        var dataPage = new DataPage();
+                        dataPage.LoadData(DataTable);
+                        NavigateToPage(dataPage);
+                    }
+
+                    MessageBox.Show("Данные успешно загружены", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка загрузки данных из файла: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
@@ -114,21 +158,20 @@ namespace UI.ViewModels
             {
                 if (_csvDataInfo != null)
                 {
-                    // Save changes to CSV file
                     await _csvDataInfo.SaveDataAsync(DataTable);
                 }
-                else if (_dbCrudVm != null)
+                else if (_dbCHService != null)
                 {
                     foreach (var item in DataCollection)
                     {
-                        await _dbCrudVm.InsertData(_selectedTableName, item);
+                        await _dbCHService.InsertDataAsync(_selectedTableName, item);
                     }
                 }
-                MessageBox.Show("Data saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Данные успешно сохранены", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка сохранения данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -136,10 +179,9 @@ namespace UI.ViewModels
         {
             var selectTableVM = new SelectTableVM();
             var selectTableDialog = new SelectTableDialog(selectTableVM);
-            var dialog = selectTableDialog;
-            if (dialog.ShowDialog() == true)
+            if (selectTableDialog.ShowDialog() == true)
             {
-                var vm = dialog.DataContext as SelectTableVM;
+                var vm = selectTableDialog.DataContext as SelectTableVM;
                 var connectionModel = new ConnectionModel
                 {
                     Server = vm.Server,
@@ -153,9 +195,8 @@ namespace UI.ViewModels
 
                 if (isConnected)
                 {
-                    MessageBox.Show("Successfully connected to the database.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Успешное подключение к БД", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                     _selectedTableName = vm.SelectedTable;
-                    _dbCrudVm = new DBCRUDVM(new DBDataInfo(_connectionString));
                     DataTable = await _dbCHService.LoadDataAsync(_connectionString, _selectedTableName);
                     var dataPage = new DataPage();
                     dataPage.LoadData(DataTable);
@@ -163,7 +204,7 @@ namespace UI.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Failed to connect to the database.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Ошибка подключения к БД", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -184,7 +225,7 @@ namespace UI.ViewModels
 
         private void ShowAbout()
         {
-            MessageBox.Show("Analytics application version 1.0\nDeveloped for thesis project\nVersion 1.0", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Аналитическое приложение версии 1.0\nРазработано для дипломной работы\nВерсия 1.0", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void ExitApplication()
@@ -192,104 +233,91 @@ namespace UI.ViewModels
             Application.Current.Shutdown();
         }
 
-        private async Task AddData()
+        private async Task AddFile()
         {
-            var newData = new DynamicDataModel();
-            if (_csvDataInfo != null)
+            var openFileDialog = new OpenFileDialog
             {
-                DataTable.Rows.Add(newData.ToDataRow(DataTable));
-                await _csvDataInfo.SaveDataAsync(DataTable);
-            }
-            else if (_dbCrudVm != null)
-            {
-                await _dbCrudVm.InsertData(_selectedTableName, newData);
-            }
-        }
+                Filter = "CSV файлы (*.csv)|*.csv|Все файлы (*.*)|*.*"
+            };
 
-        private async Task EditData()
-        {
-            var selectedData = DataCollection.FirstOrDefault();
-            if (selectedData != null)
+            if (openFileDialog.ShowDialog() == true)
             {
-                if (_csvDataInfo != null)
+                string filePath = openFileDialog.FileName;
+                var config = new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
-                    var row = DataTable.Rows.Cast<DataRow>().FirstOrDefault(r => r.Equals(selectedData.ToDataRow(DataTable)));
-                    if (row != null)
+                    Delimiter = ",",
+                    HasHeaderRecord = true
+                };
+
+                try
+                {
+                    using (var reader = new StreamReader(filePath))
+                    using (var csv = new CsvReader(reader, config))
                     {
-                        row.ItemArray = selectedData.ToDataRow(DataTable).ItemArray;
-                        await _csvDataInfo.SaveDataAsync(DataTable);
+                        DataTable dataTable = new DataTable();
+
+                        // Считываем заголовки
+                        csv.Read();
+                        csv.ReadHeader();
+                        if (csv.HeaderRecord != null)
+                        {
+                            foreach (var header in csv.HeaderRecord)
+                            {
+                                dataTable.Columns.Add(header);
+                            }
+                        }
+
+                        // Читаем строки данных и добавляем их в DataTable
+                        var records = csv.GetRecords<dynamic>();
+
+                        await Task.Run(() =>
+                        {
+                            foreach (var record in records)
+                            {
+                                if (record == null) continue;
+
+                                var dictionary = (IDictionary<string, object>)record;
+
+                                var row = dataTable.NewRow();
+                                foreach (var header in csv.HeaderRecord)
+                                {
+                                    if (dictionary.TryGetValue(header, out var value))
+                                    {
+                                        row[header] = value ?? DBNull.Value;
+                                    }
+                                }
+                                dataTable.Rows.Add(row);
+                            }
+                        });
+
+                        DataTable = dataTable;
+                        var dataPage = new DataPage();
+                        dataPage.LoadData(DataTable);
+                        NavigateToPage(dataPage);
                     }
+
+                    MessageBox.Show("Данные успешно загружены", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                else if (_dbCrudVm != null)
+                catch (Exception ex)
                 {
-                    await _dbCrudVm.UpdateData(_selectedTableName, selectedData, selectedData.Id);
+                    MessageBox.Show($"Ошибка загрузки данных из файла: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
-        private async Task DeleteData()
+        private void EditData()
         {
-            var selectedData = DataCollection.FirstOrDefault();
-            if (selectedData != null)
-            {
-                if (_csvDataInfo != null)
-                {
-                    var row = DataTable.Rows.Cast<DataRow>().FirstOrDefault(r => r.Equals(selectedData.ToDataRow(DataTable)));
-                    if (row != null)
-                    {
-                        DataTable.Rows.Remove(row);
-                        await _csvDataInfo.SaveDataAsync(DataTable);
-                    }
-                }
-                else if (_dbCrudVm != null)
-                {
-                    await _dbCrudVm.DeleteData(_selectedTableName, selectedData.Id);
-                }
-            }
         }
 
-        private void NavigateToVisualizationPage()
+        private void DeleteData()
         {
-            var visualizationPage = new DataVisualizationPage();
-            var dataVisualizer = new DataVisualizer(); 
-            var visualizationVM = new DataVisualizationVM(dataVisualizer, DataTable);
-            visualizationPage.DataContext = visualizationVM;
-            NavigateToPage(visualizationPage);
+            
         }
 
         private void NavigateToPage(Page page)
         {
-            var navigationService = NavigationService;
-            if (navigationService != null)
-            {
-                navigationService.Navigate(page);
-            }
-            else
-            {
-                MessageBox.Show("Navigation service is not available.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            var navigationService = ((MainUIWindow)Application.Current.MainWindow).MainFrame.NavigationService;
+            navigationService.Navigate(page);
         }
-
-        private NavigationService NavigationService
-        {
-            get
-            {
-                foreach (Window window in Application.Current.Windows)
-                {
-                    if (window is MainUIWindow mainWindow)
-                    {
-                        return mainWindow.MainFrame.NavigationService;
-                    }
-                }
-                return null;
-            }
-        }
-
-        protected new void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public new event PropertyChangedEventHandler PropertyChanged;
     }
 }

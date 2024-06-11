@@ -3,23 +3,30 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Core.Interfaces;
+using UI.ViewModels;
 using UI.Views.Windows;
 using System.Windows;
 using System.Linq;
 using System.Security;
 using System;
+using Services.Services;
+using Data.Repositories;
+using NLog;
+using UI.Properties;
 
 namespace UI.ViewModels
 {
     public class AuthenticationWindowVM : INotifyPropertyChanged
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly IUserService _userService;
         private string _username;
-        private SecureString _password;
+        private string _password;
 
         public AuthenticationWindowVM(IUserService userService)
         {
-            _userService = userService;
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
         public string Username
@@ -32,7 +39,7 @@ namespace UI.ViewModels
             }
         }
 
-        public SecureString Password
+        public string Password
         {
             get { return _password; }
             set
@@ -53,40 +60,37 @@ namespace UI.ViewModels
 
         private async Task Login()
         {
-            var result = await _userService.AuthenticateUserAsync(Username, ConvertToUnsecureString(Password));
-
-            if (result)
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
             {
-                MessageBox.Show("Login successful.");
-                OpenMainUIWindow();
+                MessageBox.Show("Please enter both username and password.");
+                return;
             }
-            else
-            {
-                MessageBox.Show("Invalid username or password.");
-            }
-        }
 
-        private string ConvertToUnsecureString(SecureString securePassword)
-        {
-            if (securePassword == null)
-                throw new ArgumentNullException(nameof(securePassword));
-
-            var unmanagedString = IntPtr.Zero;
             try
             {
-                unmanagedString = System.Runtime.InteropServices.Marshal.SecureStringToGlobalAllocUnicode(securePassword);
-                return System.Runtime.InteropServices.Marshal.PtrToStringUni(unmanagedString);
+                var result = await _userService.AuthenticateUserAsync(Username, Password);
+
+                if (result)
+                {
+                    MessageBox.Show("Login successful.");
+                    OpenMainUIWindow();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid username or password.");
+                }
             }
-            finally
+            catch (Exception ex)
             {
-                System.Runtime.InteropServices.Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+                Logger.Error(ex, "Error during login process.");
+                MessageBox.Show($"Error during login process: {ex.Message}");
             }
         }
 
         private void OpenMainUIWindow()
         {
-            var viewModel = new MainUIVM(); 
-            var mainUIWindow = new MainUIWindow(viewModel); 
+            var viewModel = new MainUIVM();
+            var mainUIWindow = new MainUIWindow(viewModel);
             mainUIWindow.Show();
             CloseWindow();
         }
@@ -94,6 +98,32 @@ namespace UI.ViewModels
         private void CloseWindow()
         {
             Application.Current.Windows.OfType<AuthenticationWindow>().FirstOrDefault()?.Close();
+        }
+
+        private RelayCommand openRegistrationWindow;
+
+        public ICommand OpenRegistrationWindow
+        {
+            get
+            {
+                if (openRegistrationWindow == null)
+                {
+                    openRegistrationWindow = new RelayCommand(PerformOpenRegistrationWindow);
+                }
+
+                return openRegistrationWindow;
+            }
+        }
+
+        public void PerformOpenRegistrationWindow(object commandParameter)
+        {
+            var userRepository = new UserRepository(Settings.Default.ConnectionString);
+            var securityMethods = new SecurityMethods();
+            var userService = new UserService(userRepository, securityMethods);
+
+            var registrationVM = new RegistrationVM(userService, securityMethods);
+            var registrationWindow = new RegistrationWindow(registrationVM);
+            registrationWindow.ShowDialog();
         }
     }
 }

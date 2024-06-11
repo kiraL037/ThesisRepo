@@ -10,9 +10,10 @@ namespace Services.Services
         private readonly IUserRepository _userRepository;
         private readonly ISecurityMethods _securityMethods;
 
-        public AdminService(IUserRepository userRepository)
+        public AdminService(IUserRepository userRepository, ISecurityMethods securityMethods)
         {
             _userRepository = userRepository;
+            _securityMethods = securityMethods;
         }
 
         public async Task CreateAdminAsync(string username, string password)
@@ -22,12 +23,14 @@ namespace Services.Services
                 throw new Exception("User already exists.");
             }
 
-            var hashedPassword = _securityMethods.HashPassword(password, out string salt);
+            string salt = _securityMethods.GenerateSalt();
+            var hashedPassword = _securityMethods.HashPassword(password, salt);
 
             var user = new User
             {
                 Username = username,
                 PasswordHash = hashedPassword,
+                Salt = salt,
                 IsAdmin = true
             };
 

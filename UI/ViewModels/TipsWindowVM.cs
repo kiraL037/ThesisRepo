@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
 using UI.Views.Windows;
+using System.Linq;
 
 namespace UI.ViewModels
 {
@@ -23,19 +24,24 @@ namespace UI.ViewModels
             BackToWelcomeCommand = new RelayCommand(BackToWelcome);
 
             Tips = new ObservableCollection<string>
-        {
-            "Tip 1: Follow the instructions.",
-            "Tip 2: Save your work regularly.",
-            "Tip 3: Ensure data is backed up."
-        };
+            {
+                "Tip 1",
+                "Tip 2",
+                "Tip 3"
+            };
         }
 
         private void BackToWelcome(object parameter)
         {
-            var viewModel = new WelcomeWindowVM(); 
-            var welcomeWindow = new WelcomeWindow(viewModel); 
+            var viewModel = new WelcomeWindowVM();
+            var welcomeWindow = new WelcomeWindow(viewModel);
             welcomeWindow.Show();
-            Application.Current.MainWindow.Close();
+            CloseWindow();
+        }
+
+        private void CloseWindow()
+        {
+            Application.Current.Windows.OfType<TipsWindow>().FirstOrDefault()?.Close();
         }
     }
 }

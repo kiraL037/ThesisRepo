@@ -1,7 +1,9 @@
-﻿using Core.Interfaces;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using UI.Views.Windows;
+using Core.Interfaces;
+using Services.Services;
+using System;
 
 namespace UI.ViewModels
 {
@@ -9,12 +11,6 @@ namespace UI.ViewModels
     {
         public ICommand StartCommand { get; }
         public ICommand ShowTipsCommand { get; }
-        private readonly IUserService _userService;
-
-        public WelcomeWindowVM(IUserService userService)
-        {
-            _userService = userService;
-        }
 
         public WelcomeWindowVM()
         {
@@ -35,7 +31,7 @@ namespace UI.ViewModels
 
         private void OnStart(object parameter)
         {
-            var viewModel = new AuthenticationWindowVM(_userService);
+            var viewModel = new AuthenticationWindowVM(App.UserService);
             var authWindow = new AuthenticationWindow(viewModel);
             authWindow.Show();
             Application.Current.MainWindow.Close();

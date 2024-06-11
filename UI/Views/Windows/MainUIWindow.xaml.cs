@@ -15,7 +15,8 @@ namespace UI.Views.Windows
         {
             InitializeComponent();
             _viewModel = viewModel;
-            DataContext = _viewModel;
+            DataContext = _viewModel; 
+            MainFrame.NavigationUIVisibility = System.Windows.Navigation.NavigationUIVisibility.Hidden;
         }
     }
-}
+  }

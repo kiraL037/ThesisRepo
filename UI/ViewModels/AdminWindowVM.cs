@@ -17,6 +17,7 @@ namespace UI.ViewModels
         private string _username;
         private string _password;
         private string _confirmPassword;
+
         public ICommand RegisterCommand => new RelayCommand(async _ => await Register());
 
         public AdminWindowVM(IUserService userService, ISecurityMethods securityMethods)
@@ -55,37 +56,33 @@ namespace UI.ViewModels
             }
         }
 
-        public new event PropertyChangedEventHandler PropertyChanged;
-
-        private new void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         private async Task Register()
         {
             try
             {
+                // Validate password length and complexity
                 if (Password.Length < 8 || !IsPasswordComplex(Password))
                 {
                     MessageBox.Show("Password must be at least 8 characters long and contain a number, an uppercase letter, and a special character.");
                     return;
                 }
 
+                // Confirm password match
                 if (Password != ConfirmPassword)
                 {
                     MessageBox.Show("Passwords do not match.");
                     return;
                 }
 
-                var passwordHash = _securityMethods.HashPassword(Password, out string salt);
-                var result = await _userService.RegisterUserAsync(Username, passwordHash, true);
+                string salt = _securityMethods.GenerateSalt();
+                var passwordHash = _securityMethods.HashPassword(Password, salt);
+
+                var result = await _userService.RegisterUserAsync(Username, passwordHash, salt, true);
 
                 if (result)
                 {
                     MessageBox.Show("Manager registered successfully.");
                     CloseWindow();
-                    // Открытие окна приветствия после успешной регистрации менеджера
                     OpenWelcomeWindow();
                 }
                 else
@@ -95,7 +92,7 @@ namespace UI.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred during registration: {ex.Message}");
+                MessageBox.Show($"An unexpected error occurred during registration: {ex.Message}");
             }
         }
 
@@ -121,7 +118,7 @@ namespace UI.ViewModels
 
         private void CloseWindow()
         {
-            Application.Current.Windows.OfType<RegistrationWindow>().FirstOrDefault()?.Close();
+            Application.Current.Windows.OfType<AdminWindow>().FirstOrDefault()?.Close();
         }
     }
 }

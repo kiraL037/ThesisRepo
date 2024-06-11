@@ -4,15 +4,19 @@ namespace Services.Services
 {
     public class SecurityMethods : ISecurityMethods
     {
-        public string HashPassword(string password, out string salt)
+        public string HashPassword(string password, string salt)
         {
-            salt = BCrypt.Net.BCrypt.GenerateSalt();
-            return BCrypt.Net.BCrypt.HashPassword(password);
+            return BCrypt.Net.BCrypt.HashPassword(password + salt);
         }
 
-        public bool VerifyPassword(string password, string hashedPassword)
+        public bool VerifyPassword(string password, string storedHash, string salt)
         {
-            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            return BCrypt.Net.BCrypt.Verify(password + salt, storedHash);
+        }
+
+        public string GenerateSalt()
+        {
+            return BCrypt.Net.BCrypt.GenerateSalt();
         }
     }
 }
